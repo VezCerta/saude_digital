@@ -1,0 +1,9 @@
+[submodule "trabalho_ES_web"]
+	path = trabalho_ES_web
+	url = https://github.com/talle5/trabalho_ES_web.git
+[submodule "trabalho_ES_backend"]
+	path = trabalho_ES_backend
+	url = https://github.com/talle5/trabalho_ES_backend.git
+[submodule "trabalho_ES_mobile"]
+	path = trabalho_ES_mobile
+	url = https://github.com/talle5/trabalho_ES_mobile.git
