@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
 import type { Route } from "./+types/saidas";
+import { useEffect, useMemo, useState } from "react";
 import { MainLayout } from "~/layouts/MainLayout";
 import { Breadcrumb } from "~/components/Breadcrumb";
 import { AbasProfissionais } from "~/components/AbasProfissionais";
