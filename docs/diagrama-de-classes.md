@@ -128,7 +128,7 @@ Registra a jornada do paciente durante uma visita específica à UBS.
   - `dataHoraChegada`: carimbo de data e hora do registro de entrada.
   - `status`: situação atual (`Aguardando` → `Em atendimento` → `Finalizado` ou `Cancelado`).
   - `senha`: código alfanumérico visível da chamada.
-  - `tokenAcesso`: token criptográfico individual para o paciente consultar a fila via celular (link ou QR Code) sem login prévio burocrático.
+  - `tokenAcesso`: token de autenticação individual utilizado pelo aplicativo mobile (Jetpack Compose) para vincular e consultar a fila do paciente com segurança.
 - **Métodos**:
   - `criarAtendimento()`: instancia uma nova entrada de atendimento.
   - `atualizarStatus()`: altera a etapa do paciente no fluxo.

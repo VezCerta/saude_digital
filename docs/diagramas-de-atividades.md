@@ -24,7 +24,7 @@ A modelagem de atividades do sistema **VezCerta** utiliza o conceito formal de r
 | :--- | :--- | :--- |
 | **Atendente** | Painel Web Desktop | Cadastro de pacientes, registro de chegada, definição de prioridades, chamada do próximo e baixa de atendimentos. |
 | **Sistema VezCerta** | Backend & Engine WebSocket | Validações de negócio, cálculo de prioridades, controle do estado da fila, envio de alertas instantâneos e auditoria. |
-| **Paciente** | PWA Mobile | Visualização remota da posição e tempo estimado, solicitação de desistência voluntária e comparecimento. |
+| **Paciente** | App Nativo (Jetpack Compose) | Visualização remota da posição e tempo estimado, solicitação de desistência voluntária e comparecimento. |
 
 ---
 
@@ -43,7 +43,7 @@ Apresenta a dinâmica global ponta a ponta desde a chegada do cidadão até o de
    - O sistema valida as informações cadastrais e calcula a prioridade (legal ou de triagem).
    - O paciente é posicionado na fila e passa a ser monitorado em tempo real.
 3. **Acompanhamento do Paciente**:
-   - O paciente visualiza sua posição pelo smartphone via Web/PWA.
+   - O paciente visualiza sua posição pelo smartphone através do aplicativo nativo (Jetpack Compose).
    - Possui autonomia para aguardar ou acionar o cancelamento voluntário caso desista da consulta.
 4. **Chamada do Paciente**:
    - A recepção ou consultório aciona *"Chamar próximo"*.

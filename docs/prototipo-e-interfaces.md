@@ -7,7 +7,7 @@
 ## 📌 Sumário
 - [1. Links dos Protótipos no Figma](#1-links-dos-protótipos-no-figma)
 - [2. Identidade Visual e Paleta de Cores](#2-identidade-visual-e-paleta-de-cores)
-- [3. Módulo Paciente (Mobile First / PWA)](#3-módulo-paciente-mobile-first--pwa)
+- [3. Módulo Paciente (App Nativo Jetpack Compose)](#3-módulo-paciente-app-nativo-jetpack-compose)
 - [4. Módulo Recepção / Triagem (Web Desktop)](#4-módulo-recepção--triagem-web-desktop)
 - [5. Relatório de Evidências de Validação com o Cliente](#5-relatório-de-evidências-de-validação-com-o-cliente)
 
@@ -40,9 +40,9 @@ As interfaces foram projetadas seguindo princípios de acessibilidade, contraste
 
 ---
 
-## 3. Módulo Paciente (Mobile First / PWA)
+## 3. Módulo Paciente (App Nativo Jetpack Compose)
 
-Projetado para ser acessado diretamente pelo smartphone do paciente sem necessidade de download em lojas de aplicativo (via link ou QR Code na UBS):
+Aplicativo nativo Android desenvolvido com Jetpack Compose, projetado para oferecer uma experiência fluida, acessível e intuitiva diretamente no smartphone do paciente:
 
 ### 3.1 Tela de Login e Cadastro
 Interface inicial de autenticação simplificada, permitindo o ingresso com credenciais ou novo registro e redirecionamento direto para o painel de atendimento.

@@ -30,7 +30,7 @@ O **VezCerta** é um sistema projetado para sanar os principais gargalos enfrent
 ### ✨ A Solução Proposta
 Uma plataforma unificada e em tempo real composta por:
 1. **Painel Web (Desktop) para Atendentes e Triagem**: registro de chegada, ordenação automática de prioridades legais/clínicas, disparo de chamadas e controle de faltas (*no-shows*).
-2. **Aplicação Web/PWA (Mobile) para Pacientes**: acesso instantâneo via QR Code ou link (sem exigência de download em lojas), exibição da posição na fila em tempo real, tempo estimado de espera e notificações instantâneas no momento da chamada.
+2. **Aplicativo Nativo Android (Jetpack Compose) para Pacientes**: interface mobile fluida e nativa com exibição da posição na fila em tempo real, tempo estimado de espera e notificações instantâneas no momento da chamada.
 
 ---
 
@@ -40,7 +40,7 @@ A documentação da **Parte 2 — Figma, Modelos e Arquitetura de Software** foi
 
 | Documento | Descrição | Principais Tópicos |
 | :--- | :--- | :--- |
-| 🎨 **[Protótipo, Telas e Validação](docs/prototipo-e-interfaces.md)** | Especificação visual completa e evidências com o cliente | • Links interativos no Figma<br>• Paleta de cores e identidade visual<br>• Telas do Módulo Paciente (Mobile/PWA)<br>• Telas do Módulo Atendente (Web Desktop)<br>• Validação com técnica de enfermagem |
+| 🎨 **[Protótipo, Telas e Validação](docs/prototipo-e-interfaces.md)** | Especificação visual completa e evidências com o cliente | • Links interativos no Figma<br>• Paleta de cores e identidade visual<br>• Telas do Módulo Paciente (App Nativo Jetpack Compose)<br>• Telas do Módulo Atendente (Web Desktop)<br>• Validação com técnica de enfermagem |
 | 🧩 **[Diagrama de Classes](docs/diagrama-de-classes.md)** | Modelagem estrutural orientada a objetos | • Diagrama visual e bloco Mermaid<br>• Entidades: Usuário, Profissional, Paciente, Atendimento, Triagem e Fila<br>• Atributos, operações e relacionamentos |
 | 🔄 **[Diagramas de Atividades](docs/diagramas-de-atividades.md)** | Modelagem dinâmica dos fluxos de processo em raias | • Macrofluxo integrado do atendimento<br>• Cadastro e adição à fila<br>• Visualização remota pelo paciente<br>• Solicitação e gestão de cancelamento<br>• Chamada, comparecimento e baixa |
 | 🏗️ **[Arquitetura e Tecnologias](docs/arquitetura.md)** | Decisões arquiteturais e justificativas técnicas | • Modelo Cliente-Servidor em 3 Camadas<br>• Módulos de negócio e tempo real (WebSockets)<br>• Stack tecnológica justificada<br>• Repositórios e submódulos Git |
@@ -55,12 +55,12 @@ O desenvolvimento da solução está organizado em três frentes independentes i
 trabalho_ES/ (Repositório Principal)
 ├── trabalho_ES_backend  -> API Node.js / Express / Socket.io / Prisma
 ├── trabalho_ES_web      -> Painel Recepção React / Vite / Tailwind
-└── trabalho_ES_mobile   -> PWA Paciente React / Vite / Tailwind
+└── trabalho_ES_mobile   -> App Nativo Paciente Kotlin / Jetpack Compose
 ```
 
 - ⚙️ **[Backend API](https://github.com/talle5/trabalho_ES_backend)**: regras de negócio, persistência no PostgreSQL e notificações em tempo real com `Socket.io`.
 - 🖥️ **[Frontend Web](https://github.com/talle5/trabalho_ES_web)**: painel de recepção e triagem voltado para uso desktop.
-- 📱 **[Frontend Mobile](https://github.com/talle5/trabalho_ES_mobile)**: PWA responsivo para acompanhamento autônomo pelos pacientes.
+- 📱 **[Frontend Mobile](https://github.com/talle5/trabalho_ES_mobile)**: aplicativo nativo Android em Jetpack Compose para acompanhamento autônomo pelos pacientes.
 
 ### Como clonar o projeto completo:
 
@@ -81,7 +81,7 @@ git submodule update --init --recursive
 trabalho_ES/
 ├── Documento de Especificação de Requisitos.pdf # Documentação de Requisitos (v1.0)
 ├── Protótipo de Alta Fidelidade - UBS/          # Exportações das telas do Figma
-│   ├── mobile/                                  # Módulo Paciente (Mobile First / PWA)
+│   ├── mobile/                                  # Módulo Paciente (App Nativo Jetpack Compose)
 │   └── web/                                     # Módulo Recepção / Triagem (Web Desktop)
 ├── docs/                                        # Documentação modularizada
 │   ├── arquitetura.md                           # Arquitetura, módulos e stack técnica
