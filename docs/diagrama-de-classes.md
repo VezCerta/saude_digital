@@ -18,7 +18,7 @@
 O diagrama de classes modela a estrutura de entidades, persistência e as operações centrais do domínio de triagem, controle de prioridades e filas de atendimento da UBS:
 
 <p align="center">
-  <img src="diagramas/diagrama_de_classes.png" width="85%" alt="Diagrama de Classes VezCerta" />
+  <img src="diagramas/diagrama_de_classes.png" width="85%" alt="Diagrama de Classes Saude Digital" />
 </p>
 
 ---

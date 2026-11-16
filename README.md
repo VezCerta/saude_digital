@@ -1,4 +1,4 @@
-# 🏥 VezCerta — Sistema de Gestão e Acompanhamento de Filas (UBS)
+# 🏥 Saude Digital — Sistema de Gestão e Acompanhamento de Filas (UBS)
 
 > **Solução Web e Mobile para gerenciamento, organização e acompanhamento em tempo real das filas de atendimento da UBS Rosália Mota Almeida — Quixeramobim.**
 
@@ -20,7 +20,7 @@
 
 ## 💡 Sobre o Projeto
 
-O **VezCerta** é um sistema projetado para sanar os principais gargalos enfrentados nas salas de espera da atenção básica do SUS, tendo como unidade de validação e implantação a **UBS Rosália Mota Almeida em Quixeramobim**.
+O **Saude Digital** é um sistema projetado para sanar os principais gargalos enfrentados nas salas de espera da atenção básica do SUS, tendo como unidade de validação e implantação a **UBS Rosália Mota Almeida em Quixeramobim**.
 
 ### ⚠️ O Problema
 - Aglomeração constante e desconforto nas salas de espera da unidade básica.

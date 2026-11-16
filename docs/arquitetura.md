@@ -14,7 +14,7 @@
 
 ## 1. Visão Geral e Estilo Arquitetural
 
-O sistema **VezCerta** adota o padrão **Cliente-Servidor em Três Camadas**, separando com clareza as interfaces de apresentação, a lógica de negócio/tempo real e a camada de persistência de dados:
+O sistema **Saude Digital** adota o padrão **Cliente-Servidor em Três Camadas**, separando com clareza as interfaces de apresentação, a lógica de negócio/tempo real e a camada de persistência de dados:
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -67,10 +67,10 @@ O sistema foi modularizado para simplificar o desenvolvimento independente, test
 
 | Camada | Tecnologia | Justificativa Técnica |
 | :--- | :--- | :--- |
-| **Interface Paciente (Celular)** | **Kotlin + Jetpack Compose (Android Nativo)** | Toolkit moderno de UI declarativa para Android. Proporciona alto desempenho nativo, animações fluidas, melhor integração com recursos do sistema (como notificações) e excelente legibilidade e contraste para o paciente. |
+| **Interface Paciente (Celular)** | **React (PWA) + Tailwind CSS** | Leve e responsivo. Por ser PWA/Web, o paciente não precisa instalar aplicativo da loja nem ocupar memória do smartphone — basta ler o QR Code ou acessar o link. O Tailwind garante alta legibilidade e contraste. |
 | **Interface Recepção (Desktop)** | **React + Tailwind CSS** | Interface desktop moderna, ágil e com controle simultâneo de múltiplos consultórios em um único painel. |
 | **Back-end (API)** | **Node.js (Express / NestJS) + TypeScript** | Alto desempenho em requisições assíncronas e I/O intensivo. A tipagem estrita do TypeScript reduz bugs no manuseio de dados dos pacientes e ordens de fila. |
-| **Comunicação em Tempo Real** | **Socket.io (WebSockets)** | Atualiza o aplicativo do paciente e o painel web instantaneamente assim que a fila anda, sem necessidade de atualização manual. |
+| **Comunicação em Tempo Real** | **Socket.io (WebSockets)** | Atualiza o smartphone do paciente instantaneamente assim que a fila anda, eliminando a necessidade de recarregar a página (F5). |
 | **Banco de Dados** | **PostgreSQL** | SGBD relacional robusto, confiável e compatível com transações ACID essenciais para consistência de filas e histórico médico. |
 | **ORM** | **Prisma ORM** | Mapeamento objeto-relacional tipado de ponta a ponta, agilizando queries seguras e migrações do banco. |
 
@@ -84,7 +84,7 @@ O código-fonte da solução está distribuído em submódulos Git integrados a 
 | :--- | :--- | :--- | :--- |
 | **`trabalho_ES_backend`** | API REST e servidor WebSocket | Node.js / Express / Socket.io / Prisma | [GitHub Repo](https://github.com/talle5/trabalho_ES_backend) |
 | **`trabalho_ES_web`** | Painel administrativo da Recepção/Triagem | React / Vite / Tailwind CSS | [GitHub Repo](https://github.com/talle5/trabalho_ES_web) |
-| **`trabalho_ES_mobile`** | Aplicativo Android nativo para os Pacientes | Kotlin / Jetpack Compose | [GitHub Repo](https://github.com/talle5/trabalho_ES_mobile) |
+| **`trabalho_ES_mobile`** | Aplicação PWA para os Pacientes | React / Vite / PWA / Tailwind CSS | [GitHub Repo](https://github.com/talle5/trabalho_ES_mobile) |
 
 Para clonar o projeto completo com todos os submódulos:
 

@@ -18,12 +18,12 @@
 
 ## 1. Visão Geral e Estrutura em Raias
 
-A modelagem de atividades do sistema **VezCerta** utiliza o conceito formal de raias (*swimlanes*), delimitando claramente a responsabilidade de cada ator durante o ciclo de atendimento na UBS Rosália Mota Almeida:
+A modelagem de atividades do sistema **Saude Digital** utiliza o conceito formal de raias (*swimlanes*), delimitando claramente a responsabilidade de cada ator durante o ciclo de atendimento na UBS Rosália Mota Almeida:
 
 | Raia / Ator | Plataforma | Responsabilidades Principais |
 | :--- | :--- | :--- |
 | **Atendente** | Painel Web Desktop | Cadastro de pacientes, registro de chegada, definição de prioridades, chamada do próximo e baixa de atendimentos. |
-| **Sistema VezCerta** | Backend & Engine WebSocket | Validações de negócio, cálculo de prioridades, controle do estado da fila, envio de alertas instantâneos e auditoria. |
+| **Sistema Saude Digital** | Backend & Engine WebSocket | Validações de negócio, cálculo de prioridades, controle do estado da fila, envio de alertas instantâneos e auditoria. |
 | **Paciente** | App Nativo (Jetpack Compose) | Visualização remota da posição e tempo estimado, solicitação de desistência voluntária e comparecimento. |
 
 ---
@@ -33,7 +33,7 @@ A modelagem de atividades do sistema **VezCerta** utiliza o conceito formal de r
 Apresenta a dinâmica global ponta a ponta desde a chegada do cidadão até o desfecho clínico (*atendimento realizado* ou *no-show/desistência*):
 
 <p align="center">
-  <img src="diagramas/diagrama_de_atividades.png" width="85%" alt="Macrofluxo do Atendimento VezCerta" />
+  <img src="diagramas/diagrama_de_atividades.png" width="85%" alt="Macrofluxo do Atendimento Saude Digital" />
 </p>
 
 ### Detalhamento Sequencial do Processo:
