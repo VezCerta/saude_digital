@@ -16,26 +16,32 @@
 
 O sistema **Saude Digital** adota o padrão **Cliente-Servidor em Três Camadas**, separando com clareza as interfaces de apresentação, a lógica de negócio/tempo real e a camada de persistência de dados:
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│                      CAMADA DE FRONT-END                    │
-│   [ Módulo Paciente - Mobile ]     [ Módulo Recepção - Web ]│
-│       (Jetpack Compose)               (React + Tailwind)    │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ HTTPS / WSS (WebSocket)
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      CAMADA DE BACK-END                     │
-│               [ Node.js + TypeScript + Express ]            │
-│        • JWT Auth       • Engine de Fila e Prioridades      │
-│        • Socket.io      • Cálculo de Estimativa de Espera   │
-└──────────────────────────────┬──────────────────────────────┘
-                               │ Prisma ORM
-                               ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    CAMADA DE PERSISTÊNCIA                   │
-│                     [ PostgreSQL Database ]                 │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Frontend["CAMADA DE FRONT-END"]
+        direction LR
+        Mobile["Módulo Paciente - Mobile (Kotlin + Jetpack Compose)"]
+        Web["Módulo Recepção - Web (React + Tailwind)"]
+    end
+
+    subgraph Backend["CAMADA DE BACK-END"]
+        direction TB
+        API["Node.js + TypeScript + NestJS (Express)"]
+        Auth["JWT Auth"]
+        Fila["Fila e Prioridades"]
+        Estimativa["Cálculo de Estimativa de Espera"]
+        API --- Auth
+        API --- Fila
+        API --- Estimativa
+    end
+
+    subgraph Persistencia["CAMADA DE PERSISTÊNCIA"]
+        DB[("PostgreSQL Database")]
+    end
+
+    Mobile -->|HTTPS| API
+    Web -->|HTTPS| API
+    Backend -->|TypeORM| DB
 ```
 
 ---

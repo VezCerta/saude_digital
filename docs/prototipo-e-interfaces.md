@@ -63,8 +63,8 @@ Interface inicial de autenticação simplificada, permitindo o ingresso com cred
   - **Direita**: Perfil do Usuário.
 
 <p align="center">
-  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Fila Aba 1.png" width="28%" alt="Fila Aba 1" />
-  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Fila Aba 2.png" width="28%" alt="Fila Aba 2" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Fila Ativa Dr. Márcio Gomes.png" width="28%" alt="Fila Aba 1" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Fila Ativa Dra. Cristiane Cardoso.png" width="28%" alt="Fila Aba 2" />
   <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Atualização da fila.png" width="28%" alt="Atualização da Fila" />
 </p>
 
@@ -83,7 +83,7 @@ Permite ao paciente liberar sua vaga na fila com aviso prévio de confirmação 
 - **Histórico de Atendimentos**: consultas anteriores e status de encerramento de cada chamada.
 
 <p align="center">
-  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela UBS 1.png" width="28%" alt="Unidades UBS" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Localização de UBS próxima.png" width="28%" alt="Unidades UBS" />
   <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Perfil.png" width="28%" alt="Perfil do Paciente" />
   <img src="../Protótipo de Alta Fidelidade - UBS/mobile/Tela Histórico de consultas.png" width="28%" alt="Histórico" />
 </p>
@@ -98,7 +98,7 @@ Interface otimizada para computadores da recepção da UBS, priorizando velocida
 Autenticação restrita de atendentes com e-mail corporativo e senha.
 
 <p align="center">
-  <img src="../Protótipo de Alta Fidelidade - UBS/web/Tela Inicial - Saúde Digital.png" width="85%" alt="Tela de Login Recepção" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/web/Login Page.png" width="85%" alt="Tela de Login Recepção" />
 </p>
 
 ### 4.2 Tela de Fila (Acompanhamento por Médico)
@@ -109,7 +109,7 @@ Autenticação restrita de atendentes com e-mail corporativo e senha.
 - **Tabela de Atendimento**: listagem com Posição (*1º, 2º, 3º*), Nome do Paciente e ação de controle com botão destacado *"Remover paciente"* para gerenciar desistências.
 
 <p align="center">
-  <img src="../Protótipo de Alta Fidelidade - UBS/web/Fila.png" width="85%" alt="Tela de Fila - UBS" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/web/Fila Dr. Ricardo Mendes.png" width="85%" alt="Tela de Fila - UBS" />
 </p>
 
 ### 4.3 Tela de Consultas
@@ -137,7 +137,7 @@ Autenticação restrita de atendentes com e-mail corporativo e senha.
 - **Vínculo Profissional e Segurança**: bloco informativo com os dados de lotação na unidade e gerenciamento de credenciais de acesso.
 
 <p align="center">
-  <img src="../Protótipo de Alta Fidelidade - UBS/web/Perfil do atendente — Saúde Digital.png" width="85%" alt="Tela de Perfil do Atendente" />
+  <img src="../Protótipo de Alta Fidelidade - UBS/web/Perfil do atendente dados preenchidos — Saúde Digital.png" width="85%" alt="Tela de Perfil do Atendente" />
 </p>
 
 ---
