@@ -36,12 +36,12 @@ export function AbasProfissionais({
   }, [profissionais]);
 
   return (
-    <div className="flex items-stretch border-b border-gray-300 dark:border-gray-700">
+    <div className="flex items-stretch p-2">
       <div
         ref={listaRef}
         role="tablist"
         aria-label="Filas por profissional"
-        className="flex flex-1 overflow-x-auto"
+        className="flex flex-1 gap-2 overflow-x-auto"
       >
         {profissionais.map((profissional) => {
           const ativo = profissional.id === ativoId;
@@ -53,16 +53,16 @@ export function AbasProfissionais({
               aria-selected={ativo}
               onClick={() => onSelecionar(profissional.id)}
               className={cn(
-                "flex min-w-48 flex-1 shrink-0 cursor-pointer flex-col items-center gap-0.5 border-b-2 px-4 py-3 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#005b96]",
+                "flex min-w-44 flex-1 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl px-5 py-3.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005b96]",
                 ativo
-                  ? "border-[#005b96] text-[#005b96] dark:border-blue-400 dark:text-blue-400"
-                  : "border-transparent text-gray-900 hover:bg-gray-50 dark:text-gray-100 dark:hover:bg-gray-800",
+                  ? "bg-[#e8f2fa] text-[#005b96] dark:bg-blue-950/60 dark:text-blue-300"
+                  : "bg-transparent text-gray-900 hover:bg-gray-100/80 dark:text-gray-100 dark:hover:bg-gray-800",
               )}
             >
-              <span className="text-base font-semibold">
+              <span className="text-lg font-bold leading-tight">
                 {profissional.nome}
               </span>
-              <span className="text-xs uppercase tracking-wide text-gray-600 dark:text-gray-400">
+              <span className="mt-0.5 text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                 {profissional.especialidade}
               </span>
             </button>
@@ -77,7 +77,7 @@ export function AbasProfissionais({
           onClick={() =>
             listaRef.current?.scrollBy({ left: 240, behavior: "smooth" })
           }
-          className="flex shrink-0 cursor-pointer items-center px-3 text-gray-600 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#005b96] dark:text-gray-300 dark:hover:bg-gray-800"
+          className="flex shrink-0 cursor-pointer items-center rounded-xl px-3 text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005b96] dark:text-gray-300 dark:hover:bg-gray-800"
         >
           <svg
             viewBox="0 0 24 24"

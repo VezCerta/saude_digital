@@ -11,6 +11,7 @@ export interface Profissional {
   id: string;
   nome: string;
   especialidade: string;
+  consultorio?: string;
 }
 
 export interface PacienteNaFila {
@@ -18,19 +19,45 @@ export interface PacienteNaFila {
   nome: string;
   /** Posição real na fila do profissional, começando em 1. */
   posicao: number;
+  /** Horário de chegada na recepção (ex: "08:12"). */
+  chegada: string;
+  /** Prioridade de atendimento (ex: "Normal", "Idoso 60+", "Gestante"). */
+  prioridade: string;
+}
+
+export interface ChamadaAtiva {
+  paciente: PacienteNaFila;
+  horarioChamada: string;
+  consultorio: string;
+  /** Quando true, o paciente já entrou no consultório ("EM ATENDIMENTO"). */
+  emAtendimento?: boolean;
 }
 
 export interface FilaProfissional {
   profissional: Profissional;
+  pausada?: boolean;
+  emChamada?: ChamadaAtiva | null;
   pacientes: PacienteNaFila[];
 }
 
 /** Quantidade de solicitações de saída pendentes (valor provisório). */
 export const SOLICITACOES_PENDENTES_MOCK = 2;
 
+interface PacienteBase {
+  id: string;
+  nome: string;
+  chegada: string;
+  prioridade: string;
+}
+
 interface FilaBase {
   profissional: Profissional;
-  pacientes: { id: string; nome: string }[];
+  emChamada?: {
+    paciente: PacienteBase;
+    horarioChamada: string;
+    consultorio: string;
+  } | null;
+  pacientes: PacienteBase[];
 }
 
 const filasBase: FilaBase[] = [
@@ -39,11 +66,43 @@ const filasBase: FilaBase[] = [
       id: "ricardo-mendes",
       nome: "Dr. Ricardo Mendes",
       especialidade: "Clínico geral",
+      consultorio: "Consultório 2",
+    },
+    emChamada: {
+      paciente: {
+        id: "p-100",
+        nome: "Beatriz Souza Oliveira",
+        chegada: "08:05",
+        prioridade: "Normal",
+      },
+      horarioChamada: "00:42",
+      consultorio: "Consultório 2",
     },
     pacientes: [
-      { id: "p-101", nome: "Guilherme Nunes" },
-      { id: "p-102", nome: "Beatriz Souza Oliveira" },
-      { id: "p-103", nome: "Carlos Roberto Pereira" },
+      {
+        id: "p-101",
+        nome: "Carlos Roberto Pereira",
+        chegada: "08:12",
+        prioridade: "Idoso 60+",
+      },
+      {
+        id: "p-102",
+        nome: "Ana Lima",
+        chegada: "08:20",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-103",
+        nome: "Guilherme Nunes",
+        chegada: "08:25",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-104",
+        nome: "Mariana Costa",
+        chegada: "08:32",
+        prioridade: "Gestante",
+      },
     ],
   },
   {
@@ -51,13 +110,43 @@ const filasBase: FilaBase[] = [
       id: "luiza-freitas",
       nome: "Dra. Luiza Freitas",
       especialidade: "Dentista",
+      consultorio: "Consultório 1",
+    },
+    emChamada: {
+      paciente: {
+        id: "p-200",
+        nome: "Sabrina Oliveira",
+        chegada: "07:55",
+        prioridade: "Normal",
+      },
+      horarioChamada: "01:15",
+      consultorio: "Consultório 1",
     },
     pacientes: [
-      { id: "p-201", nome: "Sabrina Oliveira" },
-      { id: "p-202", nome: "Antônio Carlos" },
-      { id: "p-203", nome: "Ricardo Felipe" },
-      { id: "p-204", nome: "Karla Santos de Oliveira" },
-      { id: "p-205", nome: "Maria Helena Marques" },
+      {
+        id: "p-201",
+        nome: "Antônio Carlos",
+        chegada: "08:10",
+        prioridade: "Idoso 60+",
+      },
+      {
+        id: "p-202",
+        nome: "Ricardo Felipe",
+        chegada: "08:18",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-203",
+        nome: "Karla Santos de Oliveira",
+        chegada: "08:30",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-204",
+        nome: "Maria Helena Marques",
+        chegada: "08:40",
+        prioridade: "Idoso 60+",
+      },
     ],
   },
   {
@@ -65,13 +154,40 @@ const filasBase: FilaBase[] = [
       id: "pedro-henrique",
       nome: "Dr. Pedro Henrique",
       especialidade: "Cardiologista",
+      consultorio: "Consultório 3",
     },
+    emChamada: null,
     pacientes: [
-      { id: "p-301", nome: "Eduardo Lima" },
-      { id: "p-302", nome: "Helena Duarte" },
-      { id: "p-303", nome: "Marcos Vinícius Almeida" },
-      { id: "p-304", nome: "Teresa Cristina Barbosa" },
-      { id: "p-305", nome: "Paulo Sérgio Azevedo" },
+      {
+        id: "p-301",
+        nome: "Eduardo Lima",
+        chegada: "08:05",
+        prioridade: "Idoso 60+",
+      },
+      {
+        id: "p-302",
+        nome: "Helena Duarte",
+        chegada: "08:15",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-303",
+        nome: "Marcos Vinícius Almeida",
+        chegada: "08:22",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-304",
+        nome: "Teresa Cristina Barbosa",
+        chegada: "08:35",
+        prioridade: "Idoso 60+",
+      },
+      {
+        id: "p-305",
+        nome: "Paulo Sérgio Azevedo",
+        chegada: "08:45",
+        prioridade: "Normal",
+      },
     ],
   },
   {
@@ -79,23 +195,47 @@ const filasBase: FilaBase[] = [
       id: "juliana-silva",
       nome: "Dra. Juliana Silva",
       especialidade: "Nutricionista",
+      consultorio: "Consultório 4",
     },
+    emChamada: null,
     pacientes: [
-      { id: "p-401", nome: "Camila Rocha" },
-      { id: "p-402", nome: "André Luiz Ferreira" },
-      { id: "p-403", nome: "Renata Martins Costa" },
+      {
+        id: "p-401",
+        nome: "Camila Rocha",
+        chegada: "08:14",
+        prioridade: "Gestante",
+      },
+      {
+        id: "p-402",
+        nome: "André Luiz Ferreira",
+        chegada: "08:28",
+        prioridade: "Normal",
+      },
+      {
+        id: "p-403",
+        nome: "Renata Martins Costa",
+        chegada: "08:50",
+        prioridade: "Normal",
+      },
     ],
   },
 ];
 
 /** Numera os pacientes na ordem em que estão (1º, 2º, 3º...). */
 export function numerarPosicoes(
-  pacientes: { id: string; nome: string }[],
+  pacientes: {
+    id: string;
+    nome: string;
+    chegada?: string;
+    prioridade?: string;
+  }[],
 ): PacienteNaFila[] {
   return pacientes.map((paciente, indice) => ({
     id: paciente.id,
     nome: paciente.nome,
     posicao: indice + 1,
+    chegada: paciente.chegada ?? "08:00",
+    prioridade: paciente.prioridade ?? "Normal",
   }));
 }
 
@@ -103,6 +243,17 @@ export function numerarPosicoes(
 export function obterFilasMock(): FilaProfissional[] {
   return filasBase.map((fila) => ({
     profissional: { ...fila.profissional },
+    pausada: false,
+    emChamada: fila.emChamada
+      ? {
+          paciente: {
+            ...fila.emChamada.paciente,
+            posicao: 0,
+          },
+          horarioChamada: fila.emChamada.horarioChamada,
+          consultorio: fila.emChamada.consultorio,
+        }
+      : null,
     pacientes: numerarPosicoes(fila.pacientes),
   }));
 }
@@ -137,6 +288,12 @@ export function filtrarFilas(
     const pacientes = fila.pacientes.filter((paciente) =>
       normalizarTexto(paciente.nome).includes(busca),
     );
-    return pacientes.length > 0 ? [{ ...fila, pacientes }] : [];
+    const chamadaCombina = fila.emChamada
+      ? normalizarTexto(fila.emChamada.paciente.nome).includes(busca)
+      : false;
+
+    return pacientes.length > 0 || chamadaCombina
+      ? [{ ...fila, pacientes }]
+      : [];
   });
 }
