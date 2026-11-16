@@ -43,6 +43,15 @@ export class PacienteFilaService {
     private readonly solicitacaoRepository: Repository<SolicitacaoSaida>,
   ) {}
 
+  // Abas da fila no app: só o que o paciente precisa ver
+  async profissionais() {
+    const profissionais = await this.profissionalRepository.find({
+      order: { id: 'ASC' },
+    });
+
+    return profissionais.map(({ id, nome, cargo }) => ({ id, nome, cargo }));
+  }
+
   // Fila ativa de um profissional, só com posição e nome, destacando o paciente logado.
   // Sem profissionalId, usa o profissional da fila em que o paciente está.
   async fila(pacienteId: number, profissionalId?: number) {
