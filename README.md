@@ -28,9 +28,9 @@ O **Saude Digital** é um sistema projetado para sanar os principais gargalos en
 - Sobrecarga contínua na equipe de recepção e triagem com interrupções frequentes para responder sobre o andamento das filas.
 
 ### ✨ A Solução Proposta
-Uma plataforma unificada e em tempo real composta por:
-1. **Painel Web (Desktop) para Atendentes e Triagem**: registro de chegada, ordenação automática de prioridades legais/clínicas, disparo de chamadas e controle de faltas (*no-shows*).
-2. **Aplicativo Nativo Android (Jetpack Compose) para Pacientes**: interface mobile fluida e nativa com exibição da posição na fila em tempo real, tempo estimado de espera e notificações instantâneas no momento da chamada.
+Uma plataforma unificada composta por:
+1. **Painel Web (Desktop) para Atendentes e Triagem**: autenticação JWT, gestão da fila de espera por profissional e ordem de chegada, cadastro de pacientes e consultas do dia, e aprovação de solicitações de saída.
+2. **Aplicativo Nativo Android (Jetpack Compose) para Pacientes**: interface mobile nativa com login por CPF ou e-mail, consulta da posição na fila por profissional, histórico de atendimentos, solicitação de cancelamento e informações de unidades de saúde.
 
 ---
 
@@ -41,9 +41,9 @@ A documentação da **Parte 2 — Figma, Modelos e Arquitetura de Software** foi
 | Documento | Descrição | Principais Tópicos |
 | :--- | :--- | :--- |
 | 🎨 **[Protótipo, Telas e Validação](docs/prototipo-e-interfaces.md)** | Especificação visual completa e evidências com o cliente | • Links interativos no Figma<br>• Paleta de cores e identidade visual<br>• Telas do Módulo Paciente (App Nativo Jetpack Compose)<br>• Telas do Módulo Atendente (Web Desktop)<br>• Validação com técnica de enfermagem |
-| 🧩 **[Diagrama de Classes](docs/diagrama-de-classes.md)** | Modelagem estrutural orientada a objetos | • Diagrama visual e bloco Mermaid<br>• Entidades: Usuário, Profissional, Paciente, Atendimento, Triagem e Fila<br>• Atributos, operações e relacionamentos |
+| 🧩 **[Diagrama de Classes](docs/diagrama-de-classes.md)** | Modelagem estrutural orientada a objetos | • Diagrama visual e bloco Mermaid<br>• Entidades: `Usuario`, `Profissional`, `Paciente`, `Atendimento`, `Triagem` e `SolicitacaoSaida`<br>• Atributos, operações e relacionamentos |
 | 🔄 **[Diagramas de Atividades](docs/diagramas-de-atividades.md)** | Modelagem dinâmica dos fluxos de processo em raias | • Macrofluxo integrado do atendimento<br>• Cadastro e adição à fila<br>• Visualização remota pelo paciente<br>• Solicitação e gestão de cancelamento<br>• Chamada, comparecimento e baixa |
-| 🏗️ **[Arquitetura e Tecnologias](docs/arquitetura.md)** | Decisões arquiteturais e justificativas técnicas | • Modelo Cliente-Servidor em 3 Camadas<br>• Módulos de negócio e tempo real (WebSockets)<br>• Stack tecnológica justificada<br>• Repositórios e submódulos Git |
+| 🏗️ **[Arquitetura e Tecnologias](docs/arquitetura.md)** | Decisões arquiteturais e justificativas técnicas | • Modelo Cliente-Servidor em 3 Camadas<br>• Módulos da API REST em NestJS + TypeORM<br>• Stack tecnológica justificada<br>• Repositórios e submódulos Git |
 
 ---
 
@@ -53,12 +53,12 @@ O desenvolvimento da solução está organizado em três frentes independentes i
 
 ```text
 trabalho_ES/ (Repositório Principal)
-├── trabalho_ES_backend  -> API Node.js / Express / Socket.io / Prisma
-├── trabalho_ES_web      -> Painel Recepção React / Vite / Tailwind
+├── trabalho_ES_backend  -> API REST Node.js / NestJS / TypeORM / PostgreSQL
+├── trabalho_ES_web      -> Painel Recepção React / React Router / Vite / Tailwind
 └── trabalho_ES_mobile   -> App Nativo Paciente Kotlin / Jetpack Compose
 ```
 
-- ⚙️ **[Backend API](https://github.com/talle5/trabalho_ES_backend)**: regras de negócio, persistência no PostgreSQL e notificações em tempo real com `Socket.io`.
+- ⚙️ **[Backend API](https://github.com/talle5/trabalho_ES_backend)**: API REST em NestJS, persistência no PostgreSQL via TypeORM, autenticação JWT e documentação Swagger.
 - 🖥️ **[Frontend Web](https://github.com/talle5/trabalho_ES_web)**: painel de recepção e triagem voltado para uso desktop.
 - 📱 **[Frontend Mobile](https://github.com/talle5/trabalho_ES_mobile)**: aplicativo nativo Android em Jetpack Compose para acompanhamento autônomo pelos pacientes.
 

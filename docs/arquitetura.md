@@ -14,7 +14,7 @@
 
 ## 1. Visão Geral e Estilo Arquitetural
 
-O sistema **Saude Digital** adota o padrão **Cliente-Servidor em Três Camadas**, separando com clareza as interfaces de apresentação, a lógica de negócio/tempo real e a camada de persistência de dados:
+O sistema **Saude Digital** adota o padrão **Cliente-Servidor em Três Camadas**, separando com clareza as interfaces de apresentação, a lógica de negócio via API REST e a camada de persistência de dados:
 
 ```mermaid
 flowchart TD
@@ -26,13 +26,13 @@ flowchart TD
 
     subgraph Backend["CAMADA DE BACK-END"]
         direction TB
-        API["Node.js + TypeScript + NestJS (Express)"]
-        Auth["JWT Auth"]
-        Fila["Fila e Prioridades"]
-        Estimativa["Cálculo de Estimativa de Espera"]
+        API["Node.js + TypeScript + NestJS"]
+        Auth["Auth (JWT + bcryptjs)"]
+        Fila["Gestão de Fila e Consultas"]
+        Saida["Solicitações de Saída"]
         API --- Auth
         API --- Fila
-        API --- Estimativa
+        API --- Saida
     end
 
     subgraph Persistencia["CAMADA DE PERSISTÊNCIA"]
@@ -48,24 +48,24 @@ flowchart TD
 
 ## 2. Módulos do Sistema
 
-O sistema foi modularizado para simplificar o desenvolvimento independente, testes e manutenibilidade:
+O back-end em **NestJS** foi modularizado para simplificar o desenvolvimento independente, os testes automatizados e a manutenibilidade:
 
-### 2.1 Módulo de Autenticação e Usuários
-- Gerencia o login dos atendentes e profissionais da UBS via JSON Web Tokens (JWT).
-- Garante controle de acesso baseado em papéis (RBAC), assegurando que apenas operadores autorizados possam chamar, reorganizar ou remover pacientes da fila.
+### 2.1 Módulo de Autenticação e Perfil (`auth` e `paciente-app`)
+- Gerencia a autenticação dos atendentes da UBS (`POST /auth/login`) e consulta/edição de perfil e senha (`GET /auth/me`, `PATCH /auth/me`, `PATCH /auth/senha`) utilizando **JWT** (`@nestjs/jwt`) e hash de senha com **`bcryptjs`**.
+- Gerencia também o acesso do paciente no aplicativo Android (`POST /paciente/login`, usando CPF ou e-mail, e `GET /paciente/me`), além da redefinição de senha do paciente pelo atendente (`PATCH /pacientes/:id/senha`).
 
-### 2.2 Módulo de Gestão da Fila
-- Controla a sequência de entrada e aplica regras de intercalação entre fila convencional e prioridades legais (idosos, gestantes, pessoas com deficiência).
-- Permite ao atendente inserir novos atendimentos, realizar encaixes emergenciais, acionar a chamada do próximo e registrar ausências (*no-shows*).
-- Gerencia os estados operacionais dos consultórios (*Ativo* ou *Em Pausa*).
+### 2.2 Módulo de Gestão da Fila (`fila` e `paciente-app`)
+- Lista os profissionais da unidade (`GET /fila/profissionais`) e organiza a fila ativa por profissional e ordem de chegada (`dataHoraChegada: 'ASC'`), considerando atendimentos com status `AGUARDANDO`, `EM_TRIAGEM` e `EM_ATENDIMENTO` (`GET /fila`, `GET /fila/:id`, `POST /fila`).
+- Permite ao atendente atualizar o status (`PATCH /fila/:id/status`) ou remover um paciente da fila marcando-o como `CANCELADO` (`PATCH /fila/:id/remover`).
+- Disponibiliza ao aplicativo do paciente a consulta à fila por profissional (`GET /paciente/fila`), retornando a lista com posição e destaque (`voce: true`) para o paciente autenticado.
 
-### 2.3 Módulo de Estimativa de Tempo de Espera
-- Calcula o tempo aproximado de espera de cada paciente com base em sua posição na fila multiplicada pelo tempo médio histórico daquele médico/consultório.
-- Pausa e congela automaticamente a contagem regressiva caso a recepção marque o consultório como *"Em Pausa"*.
+### 2.3 Módulo de Consultas e Pacientes (`consultas` e `pacientes`)
+- Permite o cadastro e busca de pacientes por nome ou CPF/identificador (`POST /pacientes`, `GET /pacientes`).
+- Gerencia as consultas do dia por profissional (`GET /consultas`, `POST /consultas`) e expõe o histórico de atendimentos ao paciente autenticado no app (`GET /paciente/consultas`).
 
-### 2.4 Módulo de Notificações em Tempo Real
-- Conecta o servidor diretamente ao smartphone do paciente através de WebSockets bidirecionais (`Socket.io`).
-- Atualiza o painel do paciente em **menos de 2 segundos** a qualquer movimentação na fila (chamadas, cancelamentos ou encaixes prioritários).
+### 2.4 Módulo de Solicitações de Saída (`solicitacoes-saida`)
+- Recebe pedidos de cancelamento/saída da fila enviados pelo paciente (`POST /paciente/cancelamento`) ou diretamente por atendimento (`POST /solicitacoes-saida`).
+- Permite que o atendente consulte as solicitações pendentes (`GET /solicitacoes-saida`), acompanhe o contador total de pendências (`GET /solicitacoes-saida/total`) e aceite a saída em transação (`PATCH /solicitacoes-saida/:id/aceitar`), marcando a solicitação como `ACEITA` e o atendimento correspondente como `CANCELADO`.
 
 ---
 
@@ -73,12 +73,13 @@ O sistema foi modularizado para simplificar o desenvolvimento independente, test
 
 | Camada | Tecnologia | Justificativa Técnica |
 | :--- | :--- | :--- |
-| **Interface Paciente (Celular)** | **React (PWA) + Tailwind CSS** | Leve e responsivo. Por ser PWA/Web, o paciente não precisa instalar aplicativo da loja nem ocupar memória do smartphone — basta ler o QR Code ou acessar o link. O Tailwind garante alta legibilidade e contraste. |
-| **Interface Recepção (Desktop)** | **React + Tailwind CSS** | Interface desktop moderna, ágil e com controle simultâneo de múltiplos consultórios em um único painel. |
-| **Back-end (API)** | **Node.js (Express / NestJS) + TypeScript** | Alto desempenho em requisições assíncronas e I/O intensivo. A tipagem estrita do TypeScript reduz bugs no manuseio de dados dos pacientes e ordens de fila. |
-| **Comunicação em Tempo Real** | **Socket.io (WebSockets)** | Atualiza o smartphone do paciente instantaneamente assim que a fila anda, eliminando a necessidade de recarregar a página (F5). |
-| **Banco de Dados** | **PostgreSQL** | SGBD relacional robusto, confiável e compatível com transações ACID essenciais para consistência de filas e histórico médico. |
-| **ORM** | **Prisma ORM** | Mapeamento objeto-relacional tipado de ponta a ponta, agilizando queries seguras e migrações do banco. |
+| **Interface Paciente (Celular)** | **Kotlin + Jetpack Compose + Material 3 (Android Nativo)** | Toolkit moderno de UI declarativa para Android. Proporciona alto desempenho nativo, animações fluidas e excelente legibilidade e contraste para o paciente. |
+| **Interface Recepção (Desktop)** | **React 19 + React Router + Vite + Tailwind CSS + TypeScript** | Interface web moderna e responsiva para o computador da recepção, com roteamento estruturado e estilização rápida com Tailwind CSS. |
+| **Back-end (API REST)** | **Node.js + NestJS + TypeScript + Swagger** | Arquitetura modular orientada a controladores e serviços injetáveis, com tipagem estrita em TypeScript e documentação interativa da API via Swagger (`/docs`). |
+| **Autenticação e Segurança** | **JWT (`@nestjs/jwt`) + `bcryptjs`** | Emissão de tokens stateless para separar rotas de funcionários (`JwtAuthGuard`) e pacientes (`PacienteAuthGuard`), com senhas protegidas por hash bcrypt. |
+| **Banco de Dados** | **PostgreSQL** | SGBD relacional robusto, confiável e compatível com transações ACID essenciais para consistência de filas e histórico de atendimentos. |
+| **ORM** | **TypeORM (`@nestjs/typeorm`)** | Mapeamento objeto-relacional integrado ao NestJS para modelagem das entidades e consultas tipadas sobre o esquema SQL do PostgreSQL. |
+| **Testes Automatizados** | **Vitest + Supertest** | Suíte rápida para testes unitários dos serviços/guards e testes end-to-end (E2E) das rotas da API. |
 
 ---
 
@@ -88,9 +89,9 @@ O código-fonte da solução está distribuído em submódulos Git integrados a 
 
 | Repositório / Submódulo | Descrição | Tecnologia | Link |
 | :--- | :--- | :--- | :--- |
-| **`trabalho_ES_backend`** | API REST e servidor WebSocket | Node.js / Express / Socket.io / Prisma | [GitHub Repo](https://github.com/talle5/trabalho_ES_backend) |
-| **`trabalho_ES_web`** | Painel administrativo da Recepção/Triagem | React / Vite / Tailwind CSS | [GitHub Repo](https://github.com/talle5/trabalho_ES_web) |
-| **`trabalho_ES_mobile`** | Aplicação PWA para os Pacientes | React / Vite / PWA / Tailwind CSS | [GitHub Repo](https://github.com/talle5/trabalho_ES_mobile) |
+| **`trabalho_ES_backend`** | API REST e persistência no PostgreSQL | Node.js / NestJS / TypeORM / PostgreSQL / JWT | [GitHub Repo](https://github.com/talle5/trabalho_ES_backend) |
+| **`trabalho_ES_web`** | Painel administrativo da Recepção/Triagem | React / React Router / Vite / Tailwind CSS | [GitHub Repo](https://github.com/talle5/trabalho_ES_web) |
+| **`trabalho_ES_mobile`** | Aplicativo Android nativo para os Pacientes | Kotlin / Jetpack Compose / Material 3 | [GitHub Repo](https://github.com/talle5/trabalho_ES_mobile) |
 
 Para clonar o projeto completo com todos os submódulos:
 
