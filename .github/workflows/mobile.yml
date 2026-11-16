@@ -1,0 +1,87 @@
+name: Mobile - Build, Test & Release APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Test & Build APK (Android Jetpack Compose)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Configurar Gradle e Cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Garantir arquivos local.properties e secrets.properties
+        run: |
+          if [ ! -f secrets.properties ]; then
+            echo "MAPS_API_KEY=DUMMY_KEY" > secrets.properties
+          fi
+          if [ ! -f local.properties ]; then
+            cp secrets.properties local.properties
+          fi
+
+      - name: Dar permissão de execução ao Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Executar testes unitários
+        run: ./gradlew testDebugUnitTest
+
+      - name: Gerar APK Debug
+        run: ./gradlew assembleDebug
+
+      - name: Publicar APK como artefato da Action
+        uses: actions/upload-artifact@v4
+        with:
+          name: vezcerta-mobile-debug-apk
+          path: mobile/app/build/outputs/apk/debug/*.apk
+          retention-days: 14
+
+  deploy-release:
+    name: Publicar APK no GitHub Releases
+    needs: build-apk
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar artefato do APK
+        uses: actions/download-artifact@v4
+        with:
+          name: vezcerta-mobile-debug-apk
+          path: ./apk
+
+      - name: Publicar / Atualizar Release Latest com o APK
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mobile-latest
+          name: "Saúde Digital Mobile (Última Build)"
+          body: "APK gerado automaticamente a partir do commit ${{ github.sha }} na branch `main`."
+          files: ./apk/*.apk
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,94 @@
+name: Backend - Build, Test & Deploy (Render)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Testes (NestJS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar projeto (NestJS)
+        run: npm run build
+
+      - name: Executar testes unitários (Vitest)
+        run: npx vitest run
+
+      - name: Publicar artefato de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: backend/dist
+          retention-days: 7
+
+  deploy-render:
+    name: Deploy no Render
+    needs: build-and-test
+    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL || secrets.RENDER_DEPLOY_HOOK_URL || secrets.RENDER_DEPLOY_HOOK }}
+      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+
+    steps:
+      - name: Acionar Deploy no Render
+        run: |
+          if [ -n "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "Acionando Deploy Hook do Render..."
+            HTTP_STATUS=$(curl -sS -o /tmp/render_response.txt -w "%{http_code}" -X POST "$RENDER_DEPLOY_HOOK_URL")
+            cat /tmp/render_response.txt
+            echo ""
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+              echo "✅ Deploy acionado com sucesso no Render via Deploy Hook (HTTP $HTTP_STATUS)."
+            else
+              echo "❌ Falha ao acionar Deploy Hook do Render (HTTP $HTTP_STATUS)."
+              exit 1
+            fi
+          elif [ -n "$RENDER_API_KEY" ] && [ -n "$RENDER_SERVICE_ID" ]; then
+            echo "Acionando deploy via API do Render para o serviço $RENDER_SERVICE_ID..."
+            HTTP_STATUS=$(curl -sS -o /tmp/render_response.txt -w "%{http_code}" \
+              -X POST "https://api.render.com/v1/services/${RENDER_SERVICE_ID}/deploys" \
+              -H "Accept: application/json" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer ${RENDER_API_KEY}" \
+              -d '{"clearCache":"do_not_clear"}')
+            cat /tmp/render_response.txt
+            echo ""
+            if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+              echo "✅ Deploy iniciado com sucesso via API do Render (HTTP $HTTP_STATUS)."
+            else
+              echo "❌ Falha ao iniciar deploy via API do Render (HTTP $HTTP_STATUS)."
+              exit 1
+            fi
+          else
+            echo "::error::Nenhuma credencial do Render encontrada. Configure a secret RENDER_BACKEND_DEPLOY_HOOK_URL (ou RENDER_API_KEY + RENDER_SERVICE_ID) em Settings > Secrets and variables > Actions."
+            exit 1
+          fi
