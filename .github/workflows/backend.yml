@@ -1,0 +1,67 @@
+name: Backend - Build, Test & Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build & Testes (NestJS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar projeto (NestJS)
+        run: npm run build
+
+      - name: Executar testes unitários (Vitest)
+        run: npx vitest run
+
+      - name: Publicar artefato de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist
+          path: backend/dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy Backend (Render)
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL }}
+
+    steps:
+      - name: Acionar Deploy no Render
+        run: |
+          if [ -n "$RENDER_DEPLOY_HOOK" ]; then
+            echo "Acionando deploy do backend no Render..."
+            curl -fsSL -X POST "$RENDER_DEPLOY_HOOK"
+          else
+            echo "Secret RENDER_BACKEND_DEPLOY_HOOK_URL não configurada; etapa de deploy via webhook ignorada."
+          fi

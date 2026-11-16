@@ -1,0 +1,88 @@
+name: Web - Build & Deploy (Vercel)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/web.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/web.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Typecheck & Build (React Router + Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar tipos (TypeScript & React Router)
+        run: npm run typecheck
+
+      - name: Compilar aplicação para produção
+        run: npm run build
+
+      - name: Publicar artefato de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: web/build
+          retention-days: 7
+
+  deploy-vercel:
+    name: Deploy na Vercel
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+
+    steps:
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Deploy via Vercel CLI (ou Deploy Hook)
+        run: |
+          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+            npm install --global vercel@latest
+            vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+            vercel build --prod --token="$VERCEL_TOKEN"
+            vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+          elif [ -n "$VERCEL_DEPLOY_HOOK_URL" ]; then
+            echo "Acionando Deploy Hook da Vercel..."
+            curl -fsSL -X POST "$VERCEL_DEPLOY_HOOK_URL"
+          else
+            echo "Configure VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID (ou VERCEL_DEPLOY_HOOK_URL) em Settings > Secrets and variables > Actions."
+          fi
