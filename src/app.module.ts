@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Paciente } from './entities/paciente.entity.js';
@@ -14,7 +15,24 @@ import { FilaModule } from './fila/fila.module.js';
 import { SolicitacoesSaidaModule } from './solicitacoes-saida/solicitacoes-saida.module.js';
 import { ConsultasModule } from './consultas/consultas.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { AutenticacaoGuard } from './auth/autenticacao.guard.js';
 import { PacienteAppModule } from './paciente-app/paciente-app.module.js';
+
+// DB_SSL: "false" (padrão, rede interna do Render), "true" (SSL com
+// verificação do certificado) ou "no-verify" (SSL sem verificar o certificado)
+function configurarSsl(config: ConfigService) {
+  const modo = config.get<string>('DB_SSL', 'false');
+
+  if (modo === 'true') {
+    return { rejectUnauthorized: true };
+  }
+
+  if (modo === 'no-verify') {
+    return { rejectUnauthorized: false };
+  }
+
+  return false;
+}
 
 @Module({
   imports: [
@@ -41,9 +59,7 @@ import { PacienteAppModule } from './paciente-app/paciente-app.module.js';
           Usuario,
         ],
         synchronize: false,
-        ssl: {
-          rejectUnauthorized: false,
-        },
+        ssl: configurarSsl(config),
       }),
     }),
 
@@ -53,5 +69,6 @@ import { PacienteAppModule } from './paciente-app/paciente-app.module.js';
     AuthModule,
     PacienteAppModule,
   ],
+  providers: [{ provide: APP_GUARD, useClass: AutenticacaoGuard }],
 })
 export class AppModule {}

@@ -20,6 +20,11 @@ import { PacienteFilaService } from './paciente-fila.service.js';
 export class PacienteFilaController {
   constructor(private readonly service: PacienteFilaService) {}
 
+  @Get('profissionais')
+  profissionais() {
+    return this.service.profissionais();
+  }
+
   @Get('fila')
   fila(
     @Req() req: { pacienteId: number },
