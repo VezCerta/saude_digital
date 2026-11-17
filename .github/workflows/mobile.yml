@@ -15,6 +15,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   build-apk:
@@ -55,6 +56,18 @@ jobs:
       - name: Gerar APK Debug
         run: ./gradlew assembleDebug
 
+      - name: Android Lint (relatório usado pelo Sonar)
+        continue-on-error: true
+        run: ./gradlew lintDebug
+
+      - name: Publicar relatório do Android Lint
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-lint-report
+          path: mobile/app/build/reports/lint-results-debug.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Publicar APK como artefato da Action
         uses: actions/upload-artifact@v4
         with:
@@ -62,9 +75,45 @@ jobs:
           path: mobile/app/build/outputs/apk/debug/*.apk
           retention-days: 14
 
+  sonar:
+    name: SonarQube Quality Gate (Android Jetpack Compose)
+    needs: build-apk
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Verificar configuração do Sonar
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::error::Secret SONAR_TOKEN não configurada. O Quality Gate do SonarQube é obrigatório."
+          exit 1
+
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
+
+      - name: Baixar relatório do Android Lint
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: mobile-lint-report
+          path: mobile/app/build/reports
+
+      - name: Análise SonarQube Cloud + Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: mobile
+          args: >
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'vezcerta' }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_MOBILE || 'VezCerta_saude_digital_mobile' }}
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
+
   deploy-release:
     name: Publicar APK no GitHub Releases
-    needs: build-apk
+    needs: [build-apk, sonar]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
@@ -85,3 +134,15 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  gemini-review:
+    name: Feedback de código (Gemini)
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/gemini-review.yml
+    with:
+      path: mobile
+      label: Mobile (Android / Kotlin)
+    secrets: inherit

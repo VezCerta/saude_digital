@@ -13,6 +13,10 @@ on:
       - '.github/workflows/backend.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build-and-test:
     name: Build & Testes (NestJS)
@@ -38,8 +42,15 @@ jobs:
       - name: Compilar projeto (NestJS)
         run: npm run build
 
-      - name: Executar testes unitários (Vitest)
-        run: npx vitest run
+      - name: Executar testes unitários com cobertura (Vitest)
+        run: npx vitest run --coverage --coverage.reporter=lcov --coverage.reporter=text-summary
+
+      - name: Publicar relatório de cobertura (usado pelo Sonar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage/lcov.info
+          retention-days: 7
 
       - name: Publicar artefato de build
         uses: actions/upload-artifact@v4
@@ -48,9 +59,56 @@ jobs:
           path: backend/dist
           retention-days: 7
 
+  sonar:
+    name: SonarQube Quality Gate (NestJS)
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Verificar configuração do Sonar
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::error::Secret SONAR_TOKEN não configurada. O Quality Gate do SonarQube é obrigatório."
+          exit 1
+
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
+
+      - name: Baixar relatório de cobertura
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-coverage
+          path: backend/coverage
+
+      - name: Análise SonarQube Cloud + Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: backend
+          args: >
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'vezcerta' }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_BACKEND || 'VezCerta_saude_digital_backend' }}
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
+
+  gemini-review:
+    name: Feedback de código (Gemini)
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/gemini-review.yml
+    with:
+      path: backend
+      label: Backend (NestJS)
+    secrets: inherit
+
   deploy-render:
     name: Deploy no Render
-    needs: build-and-test
+    needs: [build-and-test, sonar]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env:

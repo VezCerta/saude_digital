@@ -13,6 +13,10 @@ on:
       - '.github/workflows/web.yml'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
     name: Typecheck & Build (React Router + Vite)
@@ -48,9 +52,50 @@ jobs:
           path: web/build
           retention-days: 7
 
+  sonar:
+    name: SonarQube Quality Gate (React Router + Vite)
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      - name: Verificar configuração do Sonar
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "::error::Secret SONAR_TOKEN não configurada. O Quality Gate do SonarQube é obrigatório."
+          exit 1
+
+      - name: Checkout do monorepo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
+
+      - name: Análise SonarQube Cloud + Quality Gate
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: web
+          args: >
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'vezcerta' }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_WEB || 'VezCerta_saude_digital_web' }}
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
+
+  gemini-review:
+    name: Feedback de código (Gemini)
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/gemini-review.yml
+    with:
+      path: web
+      label: Web (React Router + Vite)
+    secrets: inherit
+
   deploy-vercel:
     name: Deploy na Vercel
-    needs: build
+    needs: [build, sonar]
     if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     defaults:

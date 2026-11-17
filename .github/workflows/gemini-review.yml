@@ -1,0 +1,71 @@
+name: Gemini Code Review (reutilizável)
+
+# Workflow reutilizável chamado pelos pipelines de backend, web e mobile
+# em Pull Requests. Envia o diff do módulo para o Gemini e comenta no PR.
+#
+# Configuração (Settings > Secrets and variables > Actions):
+#   Secret   GEMINI_API_KEY  -> chave gerada em https://aistudio.google.com/apikey
+#   Variable GEMINI_MODEL    -> (opcional) modelo, padrão "gemini-flash-latest"
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: "Diretório do módulo a ser revisado (ex.: backend)"
+        required: true
+        type: string
+      label:
+        description: Nome amigável do módulo exibido no comentário
+        required: true
+        type: string
+    secrets:
+      GEMINI_API_KEY:
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    name: Gemini Review (${{ inputs.label }})
+    runs-on: ubuntu-latest
+    # Não roda em PRs de forks (sem acesso a secrets) nem em PRs de bots
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+    steps:
+      - name: Verificar configuração
+        id: check
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "::warning::Secret GEMINI_API_KEY não configurada. Review do Gemini ignorado."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout (histórico completo para o diff)
+        if: steps.check.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js 24
+        if: steps.check.outputs.enabled == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Executar Gemini Code Review
+        if: steps.check.outputs.enabled == 'true'
+        run: node .github/scripts/gemini-review.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REVIEW_PATH: ${{ inputs.path }}
+          REVIEW_LABEL: ${{ inputs.label }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-flash-latest' }}
