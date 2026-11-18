@@ -15,7 +15,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   build-and-test:
@@ -27,33 +26,32 @@ jobs:
 
     steps:
       - name: Checkout do monorepo
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Configurar Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Compilar projeto (NestJS)
         run: npm run build
 
       - name: Executar testes unitários com cobertura (Vitest)
-        run: npx vitest run --coverage --coverage.reporter=lcov --coverage.reporter=text-summary
+        run: npm run test:cov -- --coverage.reporter=lcov --coverage.reporter=text-summary
 
       - name: Publicar relatório de cobertura (usado pelo Sonar)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: backend-coverage
           path: backend/coverage/lcov.info
           retention-days: 7
 
       - name: Publicar artefato de build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: backend-dist
           path: backend/dist
@@ -74,18 +72,18 @@ jobs:
           exit 1
 
       - name: Checkout do monorepo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
 
       - name: Baixar relatório de cobertura
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: backend-coverage
           path: backend/coverage
 
       - name: Análise SonarQube Cloud + Quality Gate
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         with:
           projectBaseDir: backend
           args: >
@@ -93,6 +91,26 @@ jobs:
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_BACKEND || 'VezCerta_saude_digital_backend' }}
             -Dsonar.qualitygate.wait=true
             -Dsonar.qualitygate.timeout=300
+
+      - name: Gerar relatório de problemas do Sonar
+        if: always() && env.SONAR_TOKEN != ''
+        continue-on-error: true
+        run: node .github/scripts/sonar-report.mjs
+        env:
+          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION || 'vezcerta' }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY_BACKEND || 'VezCerta_saude_digital_backend' }}
+          SONAR_PULL_REQUEST: ${{ github.event.pull_request.number }}
+          SONAR_BRANCH: ${{ github.event_name != 'pull_request' && github.ref_name || '' }}
+          OUTPUT_DIR: sonar-report
+
+      - name: Publicar relatório do Sonar
+        if: always() && env.SONAR_TOKEN != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sonar-report-backend
+          path: sonar-report/
+          if-no-files-found: ignore
+          retention-days: 30
 
   gemini-review:
     name: Feedback de código (Gemini)

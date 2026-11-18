@@ -15,7 +15,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   build:
@@ -27,17 +26,16 @@ jobs:
 
     steps:
       - name: Checkout do monorepo
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Configurar Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: web/package-lock.json
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Verificar tipos (TypeScript & React Router)
         run: npm run typecheck
@@ -46,7 +44,7 @@ jobs:
         run: npm run build
 
       - name: Publicar artefato de build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: web-build
           path: web/build
@@ -67,12 +65,12 @@ jobs:
           exit 1
 
       - name: Checkout do monorepo
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
 
       - name: Análise SonarQube Cloud + Quality Gate
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
         with:
           projectBaseDir: web
           args: >
@@ -80,6 +78,26 @@ jobs:
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY_WEB || 'VezCerta_saude_digital_web' }}
             -Dsonar.qualitygate.wait=true
             -Dsonar.qualitygate.timeout=300
+
+      - name: Gerar relatório de problemas do Sonar
+        if: always() && env.SONAR_TOKEN != ''
+        continue-on-error: true
+        run: node .github/scripts/sonar-report.mjs
+        env:
+          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION || 'vezcerta' }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY_WEB || 'VezCerta_saude_digital_web' }}
+          SONAR_PULL_REQUEST: ${{ github.event.pull_request.number }}
+          SONAR_BRANCH: ${{ github.event_name != 'pull_request' && github.ref_name || '' }}
+          OUTPUT_DIR: sonar-report
+
+      - name: Publicar relatório do Sonar
+        if: always() && env.SONAR_TOKEN != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sonar-report-web
+          path: sonar-report/
+          if-no-files-found: ignore
+          retention-days: 30
 
   gemini-review:
     name: Feedback de código (Gemini)
@@ -109,10 +127,9 @@ jobs:
 
     steps:
       - name: Checkout do monorepo
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Configurar Node.js 24
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 24
           cache: npm
@@ -121,7 +138,7 @@ jobs:
       - name: Deploy via Vercel CLI (ou Deploy Hook)
         run: |
           if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
-            npm install --global vercel@latest
+            npm install --global --ignore-scripts vercel@66.2.0
             vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
             vercel build --prod --token="$VERCEL_TOKEN"
             vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"

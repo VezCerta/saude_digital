@@ -20,9 +20,10 @@ export class AutenticacaoGuard implements CanActivate {
 
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Requisicao>();
-    const caminho = (request.path ?? request.url ?? '/').split('?')[0];
-    const normalizado =
-      caminho.length > 1 ? caminho.replace(/\/+$/, '') : caminho;
+    let normalizado = (request.path ?? request.url ?? '/').split('?')[0];
+    while (normalizado.length > 1 && normalizado.endsWith('/')) {
+      normalizado = normalizado.slice(0, -1);
+    }
 
     if (ROTAS_PUBLICAS.includes(`${request.method} ${normalizado}`)) {
       return true;

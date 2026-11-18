@@ -6,7 +6,7 @@ export function meta() {
   return [{ title: "Saúde Digital | Login" }];
 }
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/;
 
 export default function Login() {
   const [email, setEmail] = useState("");

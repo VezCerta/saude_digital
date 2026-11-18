@@ -15,6 +15,9 @@
 
 import { execFileSync } from 'node:child_process';
 
+// Caminho absoluto do git: não depende do PATH (que poderia conter diretórios graváveis).
+const GIT_BIN = '/usr/bin/git';
+
 const {
   GEMINI_API_KEY,
   GITHUB_TOKEN,
@@ -46,15 +49,21 @@ const IGNORED_FILES = [
   ':(exclude)**/build/**',
 ];
 
+// Remove quebras de linha e caracteres de controle antes de escrever no log,
+// evitando log injection / injeção de comandos do GitHub Actions (::comando::).
+function sanitizeLog(value) {
+  return String(value).replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/::/g, ': :');
+}
+
 function fail(msg) {
-  console.error(`::error::${msg}`);
+  console.error(`::error::${sanitizeLog(msg)}`);
   process.exit(1);
 }
 
 function getDiff() {
   const pathspec = [REVIEW_PATH || '.', ...IGNORED_FILES];
   return execFileSync(
-    'git',
+    GIT_BIN,
     ['diff', '--no-color', '--unified=5', `${BASE_SHA}...${HEAD_SHA}`, '--', ...pathspec],
     { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
   );
@@ -143,13 +152,13 @@ async function upsertComment(body) {
       method: 'PATCH',
       body: JSON.stringify({ body }),
     });
-    console.log(`Comentário atualizado: ${existing.html_url}`);
+    console.log(`Comentário atualizado: ${sanitizeLog(existing.html_url)}`);
   } else {
     const created = await github(`/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments`, {
       method: 'POST',
       body: JSON.stringify({ body }),
     });
-    console.log(`Comentário criado: ${created.html_url}`);
+    console.log(`Comentário criado: ${sanitizeLog(created.html_url)}`);
   }
 }
 
@@ -160,7 +169,7 @@ async function main() {
 
   let diff = getDiff();
   if (!diff.trim()) {
-    console.log(`Nenhuma alteração relevante em "${REVIEW_PATH || '.'}". Review ignorado.`);
+    console.log(`Nenhuma alteração relevante em "${sanitizeLog(REVIEW_PATH || '.')}". Review ignorado.`);
     return;
   }
 
@@ -168,7 +177,7 @@ async function main() {
   const truncated = diff.length > limit;
   if (truncated) diff = diff.slice(0, limit);
 
-  console.log(`Enviando diff (${diff.length} caracteres${truncated ? ', truncado' : ''}) para ${GEMINI_MODEL}...`);
+  console.log(`Enviando diff (${diff.length} caracteres${truncated ? ', truncado' : ''}) para ${sanitizeLog(GEMINI_MODEL)}...`);
   const review = await callGemini(buildPrompt(diff, truncated));
 
   const shortSha = HEAD_SHA.slice(0, 7);
