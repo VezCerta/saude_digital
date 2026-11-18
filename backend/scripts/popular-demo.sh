@@ -9,7 +9,7 @@ TOKEN=$(curl -s -X POST "$URL/auth/login" -H "Content-Type: application/json" \
   -d "{\"email\":\"$EMAIL\",\"senha\":\"$SENHA\"}" \
   | grep -o '"accessToken":"[^"]*"' | cut -d'"' -f4)
 
-if [ -z "$TOKEN" ]; then
+if [[ -z "$TOKEN" ]]; then
   echo "Login falhou: confira o e-mail e a senha."
   exit 1
 fi
