@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "~/utils";
-import type { Profissional } from "~/services/fila";
+import type { Profissional } from "~/types/fila";
 
 interface AbasProfissionaisProps {
   profissionais: Profissional[];

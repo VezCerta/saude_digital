@@ -1,16 +1,16 @@
 import type { Route } from "./+types/saidas";
 import { useEffect, useMemo, useState } from "react";
 import { MainLayout } from "~/layouts/MainLayout";
-import { Breadcrumb } from "~/components/Breadcrumb";
-import { AbasProfissionais } from "~/components/AbasProfissionais";
-import { ListaSolicitacoes } from "~/components/ListaSolicitacoes";
-import { AvisoSucesso } from "~/components/AvisoSucesso";
+import { Breadcrumb } from "~/components/ui/Breadcrumb";
+import { AvisoSucesso } from "~/components/ui/AvisoSucesso";
+import { AbasProfissionais } from "~/components/fila/AbasProfissionais";
+import { ListaSolicitacoes } from "~/components/saidas/ListaSolicitacoes";
 import { listarProfissionais } from "~/services/consultas";
 import {
   obterSolicitacoesMock,
   solicitacoesDoProfissional,
-  type SolicitacaoSaida,
 } from "~/services/solicitacoes";
+import type { SolicitacaoSaida } from "~/types/solicitacao";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { MainLayout } from "~/layouts/MainLayout";
-import { Button } from "~/components/Button";
-import { Card } from "~/components/Card";
+import { Button } from "~/components/ui/Button";
+import { Card } from "~/components/ui/Card";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import type { Route } from "./+types/nova-consulta";
+import type { Route } from "./+types/nova";
 import { MainLayout } from "~/layouts/MainLayout";
-import { Button } from "~/components/Button";
-import { Breadcrumb } from "~/components/Breadcrumb";
-import { SecaoRecolhivel } from "~/components/SecaoRecolhivel";
-import { CampoTexto } from "~/components/CampoTexto";
-import { CampoSelect } from "~/components/CampoSelect";
-import { AvisoSucesso } from "~/components/AvisoSucesso";
+import { Button } from "~/components/ui/Button";
+import { Breadcrumb } from "~/components/ui/Breadcrumb";
+import { SecaoRecolhivel } from "~/components/ui/SecaoRecolhivel";
+import { CampoTexto } from "~/components/ui/CampoTexto";
+import { CampoSelect } from "~/components/ui/CampoSelect";
+import { AvisoSucesso } from "~/components/ui/AvisoSucesso";
 import { buscarEnderecoPorCep, formatarEndereco } from "~/services/cep";
 import {
   CONSULTA_VAZIA,
@@ -18,9 +18,8 @@ import {
   listarProfissionais,
   pacienteCompleto,
   registrarConsulta,
-  type DadosConsulta,
-  type DadosPaciente,
 } from "~/services/consultas";
+import type { DadosConsulta, DadosPaciente } from "~/types/consulta";
 import {
   apenasDigitos,
   mascararCartaoSus,
