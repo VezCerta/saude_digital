@@ -3,7 +3,7 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints da fila. Quando
  * existirem, troque apenas a origem dos dados (hoje `obterFilasMock`) por
- * chamadas ao cliente de `~/services/api`; os tipos e as funções de filtro
+ * chamadas ao cliente de `@/services/api`; os tipos e as funções de filtro
  * continuam valendo.
  */
 
@@ -12,7 +12,7 @@ import type {
   FilaProfissional,
   PacienteNaFila,
   Profissional,
-} from "~/types/fila";
+} from "@/types/fila";
 
 export type {
   ChamadaAtiva,

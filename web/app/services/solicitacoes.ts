@@ -4,10 +4,10 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints para isso. Quando
  * existirem, troque `obterSolicitacoesMock` por uma chamada ao cliente de
- * `~/services/api`; a tela não precisa mudar.
+ * `@/services/api`; a tela não precisa mudar.
  */
 
-import type { SolicitacaoSaida } from "~/types/solicitacao";
+import type { SolicitacaoSaida } from "@/types/solicitacao";
 
 export type { SolicitacaoSaida };
 

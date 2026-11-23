@@ -1,5 +1,5 @@
 import { useId, type InputHTMLAttributes } from "react";
-import { cn } from "~/utils";
+import { cn } from "@/utils";
 
 interface CampoTextoProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "className"> {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import { MainLayout } from "~/layouts/MainLayout";
+import { MainLayout } from "@/layouts/MainLayout";
 
 interface PacienteConsulta {
   id: string;

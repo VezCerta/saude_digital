@@ -1,4 +1,4 @@
-import type { PacienteNaFila } from "~/types/fila";
+import type { PacienteNaFila } from "@/types/fila";
 
 interface TabelaFilaProps {
   pacientes: PacienteNaFila[];

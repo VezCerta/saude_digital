@@ -1,5 +1,5 @@
 import { useId, type SelectHTMLAttributes } from "react";
-import { cn } from "~/utils";
+import { cn } from "@/utils";
 
 export interface OpcaoSelect {
   valor: string;
