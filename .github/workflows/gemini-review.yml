@@ -62,6 +62,7 @@ jobs:
 
       - name: Executar Gemini Code Review
         if: steps.check.outputs.enabled == 'true'
+        continue-on-error: true
         run: node .github/scripts/gemini-review.mjs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -8,6 +8,7 @@ on:
       - '.github/workflows/web.yml'
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, closed]
     paths:
       - 'web/**'
       - '.github/workflows/web.yml'
@@ -19,6 +20,7 @@ permissions:
 jobs:
   build:
     name: Typecheck & Build (React Router + Vite)
+    if: github.event_name != 'pull_request' || github.event.action != 'closed' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -40,8 +42,18 @@ jobs:
       - name: Verificar tipos (TypeScript & React Router)
         run: npm run typecheck
 
+      - name: Executar testes unitários com cobertura (Vitest)
+        run: npm run test:cov
+
       - name: Compilar aplicação para produção
         run: npm run build
+
+      - name: Publicar relatório de cobertura (usado pelo Sonar)
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: web-coverage
+          path: web/coverage/lcov.info
+          retention-days: 7
 
       - name: Publicar artefato de build
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
@@ -68,6 +80,12 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0 # histórico completo melhora a análise do Sonar (blame / new code)
+
+      - name: Baixar relatório de cobertura
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: web-coverage
+          path: web/coverage
 
       - name: Análise SonarQube Cloud + Quality Gate
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 # v6.0.0
@@ -101,7 +119,7 @@ jobs:
 
   gemini-review:
     name: Feedback de código (Gemini)
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     permissions:
       contents: read
       pull-requests: write
@@ -114,7 +132,7 @@ jobs:
   deploy-vercel:
     name: Deploy na Vercel
     needs: [build, sonar]
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     defaults:
       run:

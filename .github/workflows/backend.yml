@@ -8,6 +8,7 @@ on:
       - '.github/workflows/backend.yml'
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, closed]
     paths:
       - 'backend/**'
       - '.github/workflows/backend.yml'
@@ -19,6 +20,7 @@ permissions:
 jobs:
   build-and-test:
     name: Build & Testes (NestJS)
+    if: github.event_name != 'pull_request' || github.event.action != 'closed' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -114,7 +116,7 @@ jobs:
 
   gemini-review:
     name: Feedback de código (Gemini)
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     permissions:
       contents: read
       pull-requests: write
@@ -127,7 +129,7 @@ jobs:
   deploy-render:
     name: Deploy no Render
     needs: [build-and-test, sonar]
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     runs-on: ubuntu-latest
     env:
       RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_BACKEND_DEPLOY_HOOK_URL || secrets.RENDER_DEPLOY_HOOK_URL || secrets.RENDER_DEPLOY_HOOK }}

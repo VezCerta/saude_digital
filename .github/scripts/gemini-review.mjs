@@ -102,8 +102,15 @@ ${diff}
 \`\`\``;
 }
 
-async function callGemini(prompt) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`;
+const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
+const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function requestModel(model, prompt) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`;
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY },
@@ -113,15 +120,46 @@ async function callGemini(prompt) {
     }),
   });
   const body = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    fail(`Gemini API respondeu HTTP ${res.status}: ${JSON.stringify(body.error ?? body)}`);
+  return { ok: res.ok, status: res.status, body };
+}
+
+async function callGemini(prompt) {
+  const models = [...new Set([GEMINI_MODEL, ...FALLBACK_MODELS].filter(Boolean))];
+  let lastError = 'Erro desconhecido';
+
+  for (const model of models) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const { ok, status, body } = await requestModel(model, prompt);
+        if (ok) {
+          const text = body.candidates?.[0]?.content?.parts
+            ?.map((p) => p.text ?? '')
+            .join('')
+            .trim();
+          if (!text) {
+            lastError = `Resposta vazia de ${model}: ${JSON.stringify(body).slice(0, 1000)}`;
+            break;
+          }
+          return { text, modelUsed: model };
+        }
+
+        lastError = `${model} respondeu HTTP ${status}: ${JSON.stringify(body.error ?? body)}`;
+        if (!RETRYABLE_STATUSES.has(status)) {
+          fail(`Gemini API ${lastError}`);
+        }
+        console.warn(`Tentativa ${attempt}/3 falhou (${sanitizeLog(lastError)}).`);
+      } catch (err) {
+        lastError = `${model} erro de rede: ${err instanceof Error ? err.message : String(err)}`;
+        console.warn(`Tentativa ${attempt}/3 falhou (${sanitizeLog(lastError)}).`);
+      }
+
+      if (attempt < 3) {
+        await sleep(attempt * 2000);
+      }
+    }
   }
-  const text = body.candidates?.[0]?.content?.parts
-    ?.map((p) => p.text ?? '')
-    .join('')
-    .trim();
-  if (!text) fail(`Resposta vazia do Gemini: ${JSON.stringify(body).slice(0, 1000)}`);
-  return text;
+
+  fail(`Gemini API indisponível após retries e fallbacks. Último erro: ${lastError}`);
 }
 
 async function github(path, options = {}) {
@@ -178,7 +216,7 @@ async function main() {
   if (truncated) diff = diff.slice(0, limit);
 
   console.log(`Enviando diff (${diff.length} caracteres${truncated ? ', truncado' : ''}) para ${sanitizeLog(GEMINI_MODEL)}...`);
-  const review = await callGemini(buildPrompt(diff, truncated));
+  const { text: review, modelUsed } = await callGemini(buildPrompt(diff, truncated));
 
   const shortSha = HEAD_SHA.slice(0, 7);
   const body = `${MARKER}
@@ -187,7 +225,7 @@ async function main() {
 ${review}
 
 ---
-<sub>Gerado automaticamente por \`${GEMINI_MODEL}\` para o commit ${shortSha}. O feedback é uma sugestão de IA e pode conter imprecisões — a revisão humana continua necessária.</sub>`;
+<sub>Gerado automaticamente por \`${modelUsed}\` para o commit ${shortSha}. O feedback é uma sugestão de IA e pode conter imprecisões — a revisão humana continua necessária.</sub>`;
 
   await upsertComment(body);
 }
