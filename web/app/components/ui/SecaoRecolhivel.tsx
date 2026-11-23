@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from "react";
-import { cn } from "~/utils";
+import { cn } from "@/utils";
 
 interface SecaoRecolhivelProps {
   titulo: string;

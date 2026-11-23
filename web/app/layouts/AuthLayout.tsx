@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router";
-import Logo from "~/assets/Logo_1.svg";
+import Logo from "@/assets/Logo_1.svg";
 
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (

@@ -3,16 +3,16 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints de consulta.
  * Quando existirem, troque o corpo de `registrarConsulta` por uma chamada ao
- * cliente de `~/services/api`; a tela não precisa mudar.
+ * cliente de `@/services/api`; a tela não precisa mudar.
  */
-import { obterFilasMock } from "~/services/fila";
+import { obterFilasMock } from "@/services/fila";
 import type {
   DadosConsulta,
   DadosPaciente,
   NovaConsulta,
-} from "~/types/consulta";
-import type { Profissional } from "~/types/fila";
-import { apenasDigitos } from "~/utils/mascaras";
+} from "@/types/consulta";
+import type { Profissional } from "@/types/fila";
+import { apenasDigitos } from "@/utils/mascaras";
 
 export type { DadosConsulta, DadosPaciente, NovaConsulta };
 

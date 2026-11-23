@@ -1,5 +1,5 @@
-import { Button } from "~/components/ui/Button";
-import type { SolicitacaoSaida } from "~/types/solicitacao";
+import { Button } from "@/components/ui/Button";
+import type { SolicitacaoSaida } from "@/types/solicitacao";
 
 interface ListaSolicitacoesProps {
   solicitacoes: SolicitacaoSaida[];

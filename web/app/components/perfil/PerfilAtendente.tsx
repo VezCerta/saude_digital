@@ -1,8 +1,8 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { CampoTexto } from "~/components/ui/CampoTexto";
-import { AvisoSucesso } from "~/components/ui/AvisoSucesso";
-import { mascararTelefone } from "~/utils/mascaras";
-import { cn } from "~/utils";
+import { CampoTexto } from "@/components/ui/CampoTexto";
+import { AvisoSucesso } from "@/components/ui/AvisoSucesso";
+import { mascararTelefone } from "@/utils/mascaras";
+import { cn } from "@/utils";
 
 type Atendente = {
   nome: string;

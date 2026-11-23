@@ -1,24 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import type { Route } from "./+types/fila";
-import { MainLayout } from "~/layouts/MainLayout";
-import { Button } from "~/components/ui/Button";
-import { ModalConfirmacao } from "~/components/ui/ModalConfirmacao";
-import { AvisoSucesso } from "~/components/ui/AvisoSucesso";
-import { AbasProfissionais } from "~/components/fila/AbasProfissionais";
-import { TabelaFila } from "~/components/fila/TabelaFila";
-import { formatDate } from "~/utils";
+import { MainLayout } from "@/layouts/MainLayout";
+import { Button } from "@/components/ui/Button";
+import { ModalConfirmacao } from "@/components/ui/ModalConfirmacao";
+import { AvisoSucesso } from "@/components/ui/AvisoSucesso";
+import { AbasProfissionais } from "@/components/fila/AbasProfissionais";
+import { TabelaFila } from "@/components/fila/TabelaFila";
+import { formatDate } from "@/utils";
 import {
   SOLICITACOES_PENDENTES_MOCK,
   filtrarFilas,
   numerarPosicoes,
   obterFilasMock,
-} from "~/services/fila";
+} from "@/services/fila";
 import type {
   FilaProfissional,
   PacienteNaFila,
   Profissional,
-} from "~/types/fila";
+} from "@/types/fila";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -79,7 +79,7 @@ web/
 ├── package.json                  # Dependências e scripts
 ├── react-router.config.ts        # Configurações do React Router
 ├── sonar-project.properties      # Configuração do SonarQube
-├── tsconfig.json                 # Configuração do TypeScript e alias (~/*)
+├── tsconfig.json                 # Configuração do TypeScript e alias (@/*)
 └── vite.config.ts                # Configuração de build do Vite
 ```
 
@@ -104,7 +104,7 @@ web/
 - **Quer chamar uma API ou adicionar regras de dados?**
   - Use ou expanda o cliente em `app/services/api.ts` e crie o serviço em `app/services/`.
 - **Quer adicionar imagens ou logos?**
-  - Coloque em `app/assets/` e importe usando `import logo from "~/assets/meu-logo.svg"`.
+  - Coloque em `app/assets/` e importe usando `import logo from "@/assets/meu-logo.svg"`.
 
 ---
 

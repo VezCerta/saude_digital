@@ -2,8 +2,8 @@
  * Busca de endereço pelo CEP na API pública ViaCEP (https://viacep.com.br).
  * É chamada pelo navegador, só quando a pessoa clica em "Buscar".
  */
-import type { EnderecoCep } from "~/types/cep";
-import { apenasDigitos } from "~/utils/mascaras";
+import type { EnderecoCep } from "@/types/cep";
+import { apenasDigitos } from "@/utils/mascaras";
 
 export type { EnderecoCep };
 
