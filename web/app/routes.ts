@@ -4,11 +4,13 @@ export default [
   // 1. Página inicial (URL: "/")
   index("pages/home.tsx"),
 
-  // 2. Novas páginas adicionadas com route("caminho-da-url", "arquivo-em-app"):
-  route("login", "pages/login.tsx"),           // Acessa em: /login
-  route("fila", "pages/fila.tsx"),             // Acessa em: /fila
-  route("consulta", "pages/consulta.tsx"),     // Acessa em: /consulta
-  route("consulta/nova", "pages/nova-consulta.tsx"), // Acessa em: /consulta/nova
-  route("saidas", "pages/saidas.tsx"),         // Acessa em: /saidas
-  route("perfil", "pages/perfil.tsx"),         // Acessa em: /perfil
+  // 2. Autenticação
+  route("login", "pages/auth/login.tsx"),
+
+  // 3. Atendimento e gestão da UBS
+  route("fila", "pages/fila.tsx"),
+  route("consulta", "pages/consultas/index.tsx"),
+  route("consulta/nova", "pages/consultas/nova.tsx"),
+  route("saidas", "pages/saidas.tsx"),
+  route("perfil", "pages/perfil.tsx"),
 ] satisfies RouteConfig;

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button } from "~/components/Button";
+import { Button } from "~/components/ui/Button";
 
 interface ModalConfirmacaoProps {
   aberto: boolean;

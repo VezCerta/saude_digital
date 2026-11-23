@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import Logo from "../assets/Logo_1.svg";
+import Logo from "~/assets/Logo_1.svg";
 import {
   UserMultiple4Outlined,
   CalendarDaysOutlined,

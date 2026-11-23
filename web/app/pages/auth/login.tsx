@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { AuthLayout } from "~/layouts/AuthLayout";
-import { TextField } from "~/components/TextField";
+import { TextField } from "~/components/ui/TextField";
 
 export function meta() {
   return [{ title: "Saúde Digital | Login" }];
