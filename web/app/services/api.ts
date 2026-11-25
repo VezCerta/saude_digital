@@ -45,10 +45,11 @@ export async function apiClient<T>(
 
   if (!response.ok) {
     let errorData: unknown;
+    const rawText = await response.text();
     try {
-      errorData = await response.json();
+      errorData = JSON.parse(rawText);
     } catch {
-      errorData = await response.text();
+      errorData = rawText;
     }
 
     throw new ApiError(

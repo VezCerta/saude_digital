@@ -4,18 +4,12 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints para isso. Quando
  * existirem, troque `obterSolicitacoesMock` por uma chamada ao cliente de
- * `~/services/api`; a tela não precisa mudar.
+ * `@/services/api`; a tela não precisa mudar.
  */
 
-export interface SolicitacaoSaida {
-  id: string;
-  nome: string;
-  cpf: string;
-  /** Horário em que o paciente pediu a saída, no formato hh:mm. */
-  horario: string;
-  /** Mesmo id usado em `Profissional` (services/fila.ts). */
-  profissionalId: string;
-}
+import type { SolicitacaoSaida } from "@/types/solicitacao";
+
+export type { SolicitacaoSaida };
 
 /** Retorna uma cópia nova das solicitações de exemplo. */
 export function obterSolicitacoesMock(): SolicitacaoSaida[] {

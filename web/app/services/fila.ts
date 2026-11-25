@@ -3,42 +3,23 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints da fila. Quando
  * existirem, troque apenas a origem dos dados (hoje `obterFilasMock`) por
- * chamadas ao cliente de `~/services/api`; os tipos e as funções de filtro
+ * chamadas ao cliente de `@/services/api`; os tipos e as funções de filtro
  * continuam valendo.
  */
 
-export interface Profissional {
-  id: string;
-  nome: string;
-  especialidade: string;
-  consultorio?: string;
-}
+import type {
+  ChamadaAtiva,
+  FilaProfissional,
+  PacienteNaFila,
+  Profissional,
+} from "@/types/fila";
 
-export interface PacienteNaFila {
-  id: string;
-  nome: string;
-  /** Posição real na fila do profissional, começando em 1. */
-  posicao: number;
-  /** Horário de chegada na recepção (ex: "08:12"). */
-  chegada: string;
-  /** Prioridade de atendimento (ex: "Normal", "Idoso 60+", "Gestante"). */
-  prioridade: string;
-}
-
-export interface ChamadaAtiva {
-  paciente: PacienteNaFila;
-  horarioChamada: string;
-  consultorio: string;
-  /** Quando true, o paciente já entrou no consultório ("EM ATENDIMENTO"). */
-  emAtendimento?: boolean;
-}
-
-export interface FilaProfissional {
-  profissional: Profissional;
-  pausada?: boolean;
-  emChamada?: ChamadaAtiva | null;
-  pacientes: PacienteNaFila[];
-}
+export type {
+  ChamadaAtiva,
+  FilaProfissional,
+  PacienteNaFila,
+  Profissional,
+};
 
 /** Quantidade de solicitações de saída pendentes (valor provisório). */
 export const SOLICITACOES_PENDENTES_MOCK = 2;

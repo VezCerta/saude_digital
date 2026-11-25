@@ -3,37 +3,18 @@
  *
  * O backend (trabalho_ES_backend) ainda não expõe endpoints de consulta.
  * Quando existirem, troque o corpo de `registrarConsulta` por uma chamada ao
- * cliente de `~/services/api`; a tela não precisa mudar.
+ * cliente de `@/services/api`; a tela não precisa mudar.
  */
-import { obterFilasMock, type Profissional } from "~/services/fila";
-import { apenasDigitos } from "~/utils/mascaras";
+import { obterFilasMock } from "@/services/fila";
+import type {
+  DadosConsulta,
+  DadosPaciente,
+  NovaConsulta,
+} from "@/types/consulta";
+import type { Profissional } from "@/types/fila";
+import { apenasDigitos } from "@/utils/mascaras";
 
-export interface DadosPaciente {
-  nome: string;
-  cpf: string;
-  cartaoSus: string;
-  telefone: string;
-  /** Formato do input de data: aaaa-mm-dd. */
-  dataNascimento: string;
-  cep: string;
-  endereco: string;
-}
-
-export interface DadosConsulta {
-  /** Tipo de consulta = especialidade do profissional. */
-  especialidade: string;
-  profissionalId: string;
-  /** Formato do input de data: aaaa-mm-dd. */
-  data: string;
-  /** Formato do input de hora: hh:mm. */
-  horario: string;
-  prioridade: string;
-}
-
-export interface NovaConsulta {
-  paciente: DadosPaciente;
-  consulta: DadosConsulta;
-}
+export type { DadosConsulta, DadosPaciente, NovaConsulta };
 
 export const PACIENTE_VAZIO: DadosPaciente = {
   nome: "",
