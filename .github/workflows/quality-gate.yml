@@ -1,0 +1,33 @@
+name: Quality Gate (Merge Blocker)
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  checks: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (histórico para detectar módulos alterados)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+
+      - name: Verificar Quality Gates do Sonar nos módulos alterados
+        run: node .github/scripts/quality-gate.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
