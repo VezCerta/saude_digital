@@ -34,30 +34,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -72,7 +72,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -252,7 +252,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,9 +285,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -322,7 +322,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -331,7 +331,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -357,7 +357,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -402,15 +402,15 @@ interface TabelaFilaProps {
   onRemover: (paciente: PacienteNaFila) =&gt; void;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >TabelaFila({</span>
+export function TabelaFila({
   pacientes,
-  mensagemVazia = <span class="branch-0 cbranch-no" title="branch not covered" >"Nenhum paciente aguardando na fila.",</span>
-  filaPausada = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
+  mensagemVazia = "Nenhum paciente aguardando na fila.",
+  filaPausada = false,
   onChamar,
   onSubirPosicao,
   onRemover,
 }: TabelaFilaProps) {
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className="overflow-x-auto"&gt;
       &lt;table className="w-full border-collapse"&gt;
         &lt;thead className="bg-[#f4f7fb] border-b border-gray-200 dark:border-gray-800 dark:bg-gray-800/80"&gt;
@@ -441,11 +441,11 @@ export function <span class="fstat-no" title="function not covered" >TabelaFila(
               &lt;/td&gt;
             &lt;/tr&gt;
           ) : (
-            pacientes.<span class="fstat-no" title="function not covered" >map((p</span>aciente, indice) =&gt; {
+            pacientes.map((paciente, indice) =&gt; {
               const ehPrioritario =
-<span class="cstat-no" title="statement not covered" >                paciente.prioridade.toLowerCase() !== "normal";</span>
+                paciente.prioridade.toLowerCase() !== "normal";
 &nbsp;
-<span class="cstat-no" title="statement not covered" >              return (</span>
+              return (
                 &lt;tr
                   key={paciente.id}
                   className="transition-colors hover:bg-gray-50/70 dark:hover:bg-gray-800/40"
@@ -480,7 +480,7 @@ export function <span class="fstat-no" title="function not covered" >TabelaFila(
                       &lt;button
                         type="button"
                         disabled={filaPausada}
-<span class="fstat-no" title="function not covered" >                        onClick={() =&gt; <span class="cstat-no" title="statement not covered" >o</span>nChamar?.(paciente)}</span>
+                        onClick={() =&gt; onChamar?.(paciente)}
                         aria-label={`Chamar ${paciente.nome}`}
                         className="cursor-pointer rounded-lg border border-gray-300 bg-white px-4 py-1.5 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
                       &gt;
@@ -489,7 +489,7 @@ export function <span class="fstat-no" title="function not covered" >TabelaFila(
 &nbsp;
                       &lt;button
                         type="button"
-<span class="fstat-no" title="function not covered" >                        onClick={() =&gt; <span class="cstat-no" title="statement not covered" >o</span>nSubirPosicao?.(paciente)}</span>
+                        onClick={() =&gt; onSubirPosicao?.(paciente)}
                         aria-label={`Subir posição de ${paciente.nome}`}
                         title={
                           indice === 0
@@ -515,7 +515,7 @@ export function <span class="fstat-no" title="function not covered" >TabelaFila(
 &nbsp;
                       &lt;button
                         type="button"
-<span class="fstat-no" title="function not covered" >                        onClick={() =&gt; <span class="cstat-no" title="statement not covered" >o</span>nRemover(paciente)}</span>
+                        onClick={() =&gt; onRemover(paciente)}
                         aria-label={`Remover ${paciente.nome} da fila`}
                         title="Remover paciente da fila"
                         className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg border border-red-300 bg-red-50 text-red-600 transition-colors hover:bg-red-100 dark:border-red-800 dark:bg-red-950/50 dark:text-red-400"
@@ -555,7 +555,7 @@ export function <span class="fstat-no" title="function not covered" >TabelaFila(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://vitest.dev/" target="_blank" rel="noopener noreferrer">Vitest</a>
-                at 2026-11-25T16:34:04.511Z
+                at 2026-11-25T18:06:58.023Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

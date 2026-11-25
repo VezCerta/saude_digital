@@ -34,30 +34,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>18/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/19</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
@@ -72,7 +72,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -187,45 +187,45 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">74x</span>
+<span class="cline-any cline-yes">74x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,34 +280,34 @@ interface AbasProfissionaisProps {
   onSelecionar: (profissionalId: string) =&gt; void;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >AbasProfissionais({</span>
+export function AbasProfissionais({
   profissionais,
   ativoId,
   onSelecionar,
 }: AbasProfissionaisProps) {
-  const listaRef = <span class="cstat-no" title="statement not covered" >useRef&lt;HTMLDivElement&gt;(null);</span>
-  const [temMais, setTemMais] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+  const listaRef = useRef&lt;HTMLDivElement&gt;(null);
+  const [temMais, setTemMais] = useState(false);
 &nbsp;
   // Mostra a seta apenas quando existem abas fora da área visível.
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  useEffect(() =&gt; {</span></span>
-    const lista = <span class="cstat-no" title="statement not covered" >listaRef.current;</span>
-<span class="cstat-no" title="statement not covered" >    if (!lista) <span class="cstat-no" title="statement not covered" >return;</span></span>
+  useEffect(() =&gt; {
+    const lista = listaRef.current;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!lista) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
-    const <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >atualizar = () =&gt;</span></span>
-<span class="cstat-no" title="statement not covered" >      setTemMais(lista.scrollLeft + lista.clientWidth &lt; lista.scrollWidth - 1);</span>
+    const atualizar = () =&gt;
+      setTemMais(lista.scrollLeft + lista.clientWidth &lt; lista.scrollWidth - 1);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    atualizar();</span>
-<span class="cstat-no" title="statement not covered" >    lista.addEventListener("scroll", atualizar);</span>
-    const observador = <span class="cstat-no" title="statement not covered" >new ResizeObserver(atualizar);</span>
-<span class="cstat-no" title="statement not covered" >    observador.observe(lista);</span>
+    atualizar();
+    lista.addEventListener("scroll", atualizar);
+    const observador = new ResizeObserver(atualizar);
+    observador.observe(lista);
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    return () =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >      lista.removeEventListener("scroll", atualizar);</span>
-<span class="cstat-no" title="statement not covered" >      observador.disconnect();</span>
+    return () =&gt; {
+      lista.removeEventListener("scroll", atualizar);
+      observador.disconnect();
     };
   }, [profissionais]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className="flex items-stretch p-2"&gt;
       &lt;div
         ref={listaRef}
@@ -315,15 +315,15 @@ export function <span class="fstat-no" title="function not covered" >AbasProfiss
         aria-label="Filas por profissional"
         className="flex flex-1 gap-2 overflow-x-auto"
       &gt;
-        {profissionais.<span class="fstat-no" title="function not covered" >map((p</span>rofissional) =&gt; {
-          const ativo = <span class="cstat-no" title="statement not covered" >profissional.id === ativoId;</span>
-<span class="cstat-no" title="statement not covered" >          return (</span>
+        {profissionais.map((profissional) =&gt; {
+          const ativo = profissional.id === ativoId;
+          return (
             &lt;button
               key={profissional.id}
               type="button"
               role="tab"
               aria-selected={ativo}
-<span class="fstat-no" title="function not covered" >              onClick={() =&gt; <span class="cstat-no" title="statement not covered" >o</span>nSelecionar(profissional.id)}</span>
+              onClick={() =&gt; onSelecionar(profissional.id)}
               className={cn(
                 "flex min-w-44 flex-1 shrink-0 cursor-pointer flex-col items-center justify-center gap-0.5 rounded-xl px-5 py-3.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005b96]",
                 ativo
@@ -343,7 +343,7 @@ export function <span class="fstat-no" title="function not covered" >AbasProfiss
       &lt;/div&gt;
 &nbsp;
       {temMais &amp;&amp; (
-        &lt;button
+<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;button</span>
           type="button"
           aria-label="Ver mais profissionais"
 <span class="fstat-no" title="function not covered" >          onClick={() =&gt;</span>
@@ -375,7 +375,7 @@ export function <span class="fstat-no" title="function not covered" >AbasProfiss
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://vitest.dev/" target="_blank" rel="noopener noreferrer">Vitest</a>
-                at 2026-11-25T16:34:04.511Z
+                at 2026-11-25T18:06:58.023Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

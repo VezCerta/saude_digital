@@ -34,30 +34,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/19</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>8/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -72,7 +72,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -160,7 +160,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -170,34 +170,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -230,8 +230,8 @@ import {
 } from "@/services/solicitacoes";
 import type { SolicitacaoSaida } from "@/types/solicitacao";
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >meta({</span>}: Route.MetaArgs) {
-<span class="cstat-no" title="statement not covered" >  return [</span>
+export function meta({}: Route.MetaArgs) {
+  return [
     { title: "Saúde Digital - Solicitações de saída" },
     {
       name: "description",
@@ -240,35 +240,35 @@ export function <span class="fstat-no" title="function not covered" >meta({</spa
   ];
 }
 &nbsp;
-export default function <span class="fstat-no" title="function not covered" >Saidas() {</span>
-  const profissionais = <span class="cstat-no" title="statement not covered" >useMemo(listarProfissionais, []);</span>
+export default function Saidas() {
+  const profissionais = useMemo(listarProfissionais, []);
   const [solicitacoes, setSolicitacoes] =
-<span class="cstat-no" title="statement not covered" >    useState&lt;SolicitacaoSaida[]&gt;(obterSolicitacoesMock);</span>
-  const [profissionalAtivoId, setProfissionalAtivoId] = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >useState(</span></span>
-    () =&gt; <span class="cstat-no" title="statement not covered" >profissionais[0]?.id ?? "",</span>
+    useState&lt;SolicitacaoSaida[]&gt;(obterSolicitacoesMock);
+  const [profissionalAtivoId, setProfissionalAtivoId] = useState(
+    () =&gt; profissionais[0]?.id ?? <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
   );
-  const [avisoVisivel, setAvisoVisivel] = <span class="cstat-no" title="statement not covered" >useState(false);</span>
+  const [avisoVisivel, setAvisoVisivel] = useState(false);
 &nbsp;
   // Esconde o aviso de sucesso depois de 3 segundos.
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  useEffect(() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >    if (!avisoVisivel) <span class="cstat-no" title="statement not covered" >return;</span></span>
-    const temporizador = <span class="cstat-no" title="statement not covered" >window.<span class="fstat-no" title="function not covered" >setTimeout(() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etAvisoVisivel(false), 3</span>000);</span>
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    return () =&gt; <span class="cstat-no" title="statement not covered" >w</span>indow.clearTimeout(temporizador);</span></span>
+  useEffect(() =&gt; {
+    if (!avisoVisivel) return;
+    const temporizador = window.<span class="fstat-no" title="function not covered" >setTimeout(() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etAvisoVisivel(false), 3</span>000);
+    return () =&gt; window.clearTimeout(temporizador);
   }, [avisoVisivel]);
 &nbsp;
-  const doProfissional = <span class="cstat-no" title="statement not covered" >solicitacoesDoProfissional(</span>
+  const doProfissional = solicitacoesDoProfissional(
     solicitacoes,
     profissionalAtivoId,
   );
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >aceitar(s</span>olicitacao: SolicitacaoSaida) {
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    setSolicitacoes((a</span>tual) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >      atual.<span class="fstat-no" title="function not covered" >filter((i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id !== solicitacao.id)</span>,</span>
+  function aceitar(solicitacao: SolicitacaoSaida) {
+    setSolicitacoes((atual) =&gt;
+      atual.filter((item) =&gt; item.id !== solicitacao.id),
     );
-<span class="cstat-no" title="statement not covered" >    setAvisoVisivel(true);</span>
+    setAvisoVisivel(true);
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;MainLayout&gt;
       &lt;div className="flex flex-col gap-6"&gt;
         &lt;Breadcrumb itens={[{ rotulo: "Solicitações de saída" }]} /&gt;
@@ -294,7 +294,7 @@ export default function <span class="fstat-no" title="function not covered" >Sai
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://vitest.dev/" target="_blank" rel="noopener noreferrer">Vitest</a>
-                at 2026-11-25T16:34:04.511Z
+                at 2026-11-25T18:06:58.023Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
