@@ -5,7 +5,7 @@ name: Gemini Code Review (reutilizável)
 #
 # Configuração (Settings > Secrets and variables > Actions):
 #   Secret   GEMINI_API_KEY  -> chave gerada em https://aistudio.google.com/apikey
-#   Variable GEMINI_MODEL    -> (opcional) modelo, padrão "gemini-flash-latest"
+#   Variable GEMINI_MODEL    -> (opcional) modelo, padrão "gemini-4-hydrogen"
 
 on:
   workflow_call:
@@ -71,4 +71,4 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           REVIEW_PATH: ${{ inputs.path }}
           REVIEW_LABEL: ${{ inputs.label }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-flash-latest' }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-4-hydrogen' }}

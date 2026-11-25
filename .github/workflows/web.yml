@@ -1,11 +1,6 @@
 name: Web - Build & Deploy (Vercel)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'web/**'
-      - '.github/workflows/web.yml'
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened, closed]

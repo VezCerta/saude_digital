@@ -10,7 +10,7 @@
 //   GITHUB_REPOSITORY, PR_NUMBER, BASE_SHA, HEAD_SHA (fornecidas pelo workflow)
 //   REVIEW_PATH      diretório do módulo (ex.: backend). Vazio = repositório inteiro
 //   REVIEW_LABEL     nome amigável do módulo (ex.: Backend NestJS)
-//   GEMINI_MODEL     modelo (padrão: gemini-flash-latest)
+//   GEMINI_MODEL     modelo (padrão: gemini-4-hydrogen)
 //   MAX_DIFF_CHARS   limite de caracteres do diff enviado (padrão: 120000)
 
 import { execFileSync } from 'node:child_process';
@@ -27,7 +27,7 @@ const {
   HEAD_SHA,
   REVIEW_PATH = '',
   REVIEW_LABEL = REVIEW_PATH || 'repositório',
-  GEMINI_MODEL = 'gemini-flash-latest',
+  GEMINI_MODEL = 'gemini-4-hydrogen',
   MAX_DIFF_CHARS = '120000',
   GITHUB_API_URL = 'https://api.github.com',
 } = process.env;
@@ -103,7 +103,7 @@ ${diff}
 }
 
 const RETRYABLE_STATUSES = new Set([429, 500, 502, 503, 504]);
-const FALLBACK_MODELS = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+const FALLBACK_MODELS = ['gemini-4-argon', 'gemini-4-neon'];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
